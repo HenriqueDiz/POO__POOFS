@@ -48,4 +48,9 @@ class Fatura{
         for(Produto produto : produtos)
             System.out.println(produto);
     }       
+
+    public ArrayList<Produto> getProdutos() {
+        return produtos;
+    }
+    
 }
