@@ -19,4 +19,8 @@ class ProdutoAlimentarTaxaNormal extends ProdutoAlimentar {
         }
         return taxaBase / 100;
     }
+<<<<<<< HEAD
 }   
+=======
+}   
+>>>>>>> 79927db3150e896b2476a586ace5c8b98a893321
