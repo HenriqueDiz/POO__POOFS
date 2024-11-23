@@ -13,4 +13,24 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
     public Categoria getCategoria() {return categoria;}
 
     public void setCategoria(Categoria categoria) {this.categoria = categoria;}
+
+    @Override
+    public double calcularIVA(String localizacao) {
+        double taxaBase;
+        switch (localizacao.toLowerCase()) {
+            case "madeira":
+                taxaBase = 12;
+                break;
+            case "açores":
+                taxaBase = 9;
+                break;
+            default:
+                taxaBase = 13;
+        }
+        
+        if (categoria == Categoria.vinhos) {
+            taxaBase += 1;
+        }
+        return taxaBase / 100; 
+    }
 }
