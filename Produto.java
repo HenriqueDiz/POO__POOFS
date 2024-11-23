@@ -11,6 +11,8 @@ abstract class Produto {
         this.valorUnitario = valorUnitario;
     }
 
+    public abstract double calcularIVA(String localizacao);
+
     public String getNome() {return nome;} 
 
     public void setNome(String nome) {this.nome = nome;}
