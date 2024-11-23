@@ -1,9 +1,7 @@
 abstract class Produto {
-    protected String codigo;
-    protected String nome;
-    protected String descricao;
-    protected int quantidade;
+    protected String codigo, nome, descricao;
     protected double valorUnitario;
+    protected int quantidade;
 
     public Produto(String codigo, String nome, String descricao, int quantidade, double valorUnitario) {
         this.codigo = codigo;
@@ -13,5 +11,19 @@ abstract class Produto {
         this.valorUnitario = valorUnitario;
     }
 
-    public abstract double calcularIVA(String localizacao);
+    public String getNome() {return nome;} 
+
+    public void setNome(String nome) {this.nome = nome;}
+
+    public String getDescricao() {return descricao;}
+
+    public void setDescricao(String descricao) {this.descricao = descricao;}
+
+    public double getValorUnitario() {return valorUnitario;}
+
+    public void setValorUnitario(double valorUnitario) {this.valorUnitario = valorUnitario;}
+
+    public int getQuantidade() {return quantidade;}
+
+    public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
 }
