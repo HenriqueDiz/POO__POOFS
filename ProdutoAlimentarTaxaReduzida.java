@@ -22,4 +22,23 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
                 certificacoes.add(values[i]);
         return certificacoes;
     }
+
+    @Override
+    public double calcularIVA(String localizacao) {
+        double taxaBase;
+        switch (localizacao.toLowerCase()) {
+            case "madeira":
+                taxaBase = 5;
+                break;
+            case "açores":
+                taxaBase = 4;
+                break;
+            default: //ou seja continente
+                taxaBase = 6;
+        }
+        if (certificacao.size() == 4) {
+            taxaBase -= 1;
+        }
+        return taxaBase / 100; //pa ser percentagem
+    }
 }

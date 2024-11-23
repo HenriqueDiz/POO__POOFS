@@ -2,39 +2,11 @@ import java.util.*;
 import java.io.*;
 
 class GestaoFaturas {
-    private Map<Integer, List<Fatura>> faturasPorCliente;
-    private List<Cliente> clientes;
+    private final Map<Integer, List<Fatura>> gestaoFaturas;
 
     public GestaoFaturas() {
-        clientes = new ArrayList<>();
-        faturasPorCliente = new HashMap<>();
-    }
-
-    public void adicionarCliente(Cliente cliente) {
-        clientes.add(cliente);
-    }
-
-    public void adicionarFatura(int clienteId, Fatura fatura) {
-        faturasPorCliente.computeIfAbsent(clienteId, k -> new ArrayList<>()).add(fatura);
-    }
-
-    public void listarClientes() {
-        for (Cliente cliente : clientes) {
-            System.out.println("Nome: " + cliente.getNome() +
-                    ", NIF: " + cliente.getContribuinte() +
-                    ", Localização: " + cliente.getLocalizacao());
-        }
-    }
-
-    public void listarFaturas() {
-        for (Map.Entry<Integer, List<Fatura>> entry : faturasPorCliente.entrySet()) {
-            int clienteId = entry.getKey();
-            List<Fatura> faturas = entry.getValue();
-            System.out.println("Cliente ID: " + clienteId);
-            for (Fatura fatura : faturas) {
-                System.out.println(fatura);
-            }
-        }
+        this.gestaoFaturas = new HashMap<>();
+        importarFaturas();
     }
 
     public void importarFaturas(String caminho) {
@@ -58,12 +30,13 @@ class GestaoFaturas {
         }
     }
 
+    /*
     private Cliente buscarClientePorId(int id) {
         for (Cliente cliente : clientes) {
             if (cliente.getId() == id) return cliente;
         }
         return null;
-    }
+    }*/
 
     public void exportarFaturas(String caminho) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(caminho))) {
@@ -102,5 +75,33 @@ class GestaoFaturas {
         System.out.println("Valor Total sem IVA: " + totalSemIVA);
         System.out.println("Valor Total do IVA: " + totalIVA);
         System.out.println("Valor Total com IVA: " + totalComIVA);
+    }
+
+    public void visualizarFatura(){
+        System.out.println("Qual o número da fatura que deseja visualizar ? ");
+        Scanner scanner = new Scanner(System.in);
+        int numero = scanner.nextInt();
+        for (List<Fatura> listaFaturas : gestaoFaturas.values()) {
+            for (Fatura fatura : listaFaturas) {
+                if (fatura.getNumero() == numero) {
+                
+                    break;
+                }
+            }
+        }
+        scanner.close();
+    }
+
+    public void listarFaturas() {
+        for (List<Fatura> listaFaturas : gestaoFaturas.values()) {
+            for (Fatura fatura : listaFaturas) {
+                System.out.println("Fatura nº: " + fatura.getNumero());
+                System.out.println("Cliente: " + fatura.getCliente().getNome());
+                System.out.println("Localização do Cliente: " + fatura.getCliente().getLocalizacao());
+                System.out.println("Número de Produtos: " + fatura.getProdutos().size());
+                System.out.println("Valor Total sem IVA: " + fatura.calcularTotalSemIVA());
+                System.out.println("Valor Total com IVA: " + fatura.calcularTotalComIVA() + "\n");
+            }
+        }
     }
 }

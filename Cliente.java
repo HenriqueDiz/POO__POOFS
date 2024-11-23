@@ -15,6 +15,10 @@ class Cliente {
         this.id = id;
     }
 
+    public String clienteToString(){
+        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacao.toString();
+    }
+
     public String getNome() {return nome;}
 
     public void setNome(String nome) {this.nome = nome;}

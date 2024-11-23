@@ -11,11 +11,19 @@ abstract class Produto {
         this.valorUnitario = valorUnitario;
     }
 
+    public String produtoToString(){
+        return "Produto: " + nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
+    }
+
     public abstract double calcularIVA(String localizacao);
 
     public String getNome() {return nome;} 
 
     public void setNome(String nome) {this.nome = nome;}
+
+    public String getCodigo() {return codigo;}
+
+    public void setCodigo(String codigo) {this.codigo = codigo;}
 
     public String getDescricao() {return descricao;}
 

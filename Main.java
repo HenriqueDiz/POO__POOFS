@@ -1,16 +1,39 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        GestaoFaturas gestao = new GestaoFaturas();
+        
+        GestaoFaturas gestaoFaturas = new GestaoFaturas();
 
-        Cliente cliente1 = new Cliente("Messias Malandro", 123456789, Cliente.Localizacao.portugalContinenal, 1);
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("1. Criar e editar cliente");
+            System.out.println("2. Listar clientes");
+            System.out.println("3. Criar e editar faturas");
+            System.out.println("4. Listar faturas");
+            System.out.println("5. Visualizar fatura");
+            System.out.println("6. Estatísticas");
+            System.out.println("7. Sair");
+            System.out.println("Escolha uma opção: ");
+            int opcao = scanner.nextInt();
 
-        gestao.adicionarCliente(cliente1);
-
-        Fatura fatura1 = new Fatura(101, cliente1, new Data(15, 3, 2024));
-
-        gestao.adicionarFatura(cliente1.getId(), fatura1);
-
-        gestao.listarClientes();
-        gestao.listarFaturas();
+            switch (opcao) {
+                case 1 -> {
+                }
+                case 2 -> {
+                }
+                case 3 -> {
+                }
+                case 4 -> {
+                }
+                case 5 -> {
+                }
+                case 6 -> {
+                }
+                case 7 -> System.out.println("FUI...");
+                default -> System.out.println("Opção inválida.");
+            }
+            scanner.close();
+        }
     }
 }
