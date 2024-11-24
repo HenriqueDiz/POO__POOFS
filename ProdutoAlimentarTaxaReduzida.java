@@ -34,4 +34,11 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
         if (biologico) taxaBase -= 10;
         return taxaBase / 100.0;
     }
+
+    public Set<Certificacao> getCertificacao() {return certificacao;}
+
+    public void setCertificacao(int certificacaoBits) {
+        this.certificacao.clear();
+        this.certificacao.addAll(decodeCertificacao(certificacaoBits));
+    }
 }

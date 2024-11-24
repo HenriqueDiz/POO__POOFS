@@ -11,7 +11,7 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
         this.categoriaFarmacia = categoriaFarmacia;
     }
 
-    public String getCategoriaFarmacia() {return categoriaFarmacia.toString();}
+    public CategoriaFarmacia getCategoriaFarmacia() {return categoriaFarmacia;}
 
     public void setCategoriaFarmacia(CategoriaFarmacia categoriaFarmacia) {this.categoriaFarmacia = categoriaFarmacia;}
 

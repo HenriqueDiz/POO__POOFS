@@ -4,7 +4,7 @@ class Fatura{
     protected int numero;
     protected Cliente cliente;
     protected Data data;
-    protected List<Produto> produtos; // ArrayList
+    protected List<Produto> produtos;
 
     public Fatura(int numero, Cliente cliente, Data data, List<Produto> produtos) {
         this.numero = numero;
@@ -21,9 +21,9 @@ class Fatura{
         System.out.println("\nFatura nº: " + numero);
         System.out.println("Cliente: " + cliente.toString() + "\n");
         listarProdutos();
-        System.out.printf("Total IVA: %.2f\n", calcularTotalDoIVA());
-        System.out.printf("Total sem IVA: %.2f\n", calcularTotalSemIVA());
-        System.out.printf("Total com IVA: %.2f\n", calcularTotalComIVA());
+        System.out.printf("\n\nTotal do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
+        System.out.printf("Total sem IVA da Fatura: %.2f\n", calcularTotalSemIVA());
+        System.out.printf("Total com IVA da Fatura: %.2f\n\n", calcularTotalComIVA());
     }
 
     public void listarProdutos(){

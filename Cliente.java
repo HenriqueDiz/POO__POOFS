@@ -14,13 +14,10 @@ class Cliente {
         this.localizacao = localizacao;
         this.id = id;
     }
+    
     public String clienteToString(){
-        String localizacaoFormatada = switch (localizacao) {
-            case portugalContinental -> "Portugal Continental";
-            case madeira -> "Madeira";
-            case açores -> "Açores";
-        };
-        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada;
+        String localizacaoFormatada = getLocalizacaoFormatada();
+        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada + ", ID: " + id;
     }
 
     public String getNome() {return nome;}
@@ -30,6 +27,14 @@ class Cliente {
     public int getContribuinte() {return contribuinte;}
 
     public void setContribuinte(int contribuinte) {this.contribuinte = contribuinte;}
+
+    public String getLocalizacaoFormatada() {
+        return switch (localizacao) {
+            case portugalContinental -> "Portugal Continental";
+            case madeira -> "Madeira";
+            case açores -> "Açores";
+        };
+    }
 
     public Localizacao getLocalizacao() {return localizacao;}
 

@@ -2,7 +2,7 @@ import java.util.*;
 
 class GestaoFaturas {
     private final Map<Integer, List<Fatura>> gestaoFaturas;
-    private final Map<Integer, Cliente> clientes;
+    private final Map<Integer, Cliente> clientes;           // TO REMOVE
     
     public GestaoFaturas() {
         this.gestaoFaturas = new HashMap<>();
@@ -77,7 +77,7 @@ class GestaoFaturas {
         }
     }*/
 
-    // auxiliar propcurar por id's (PPP idea)
+    // auxiliar propcurar por id's (PPP idea) - tbh não precisamos disto
     private final List<Produto> produtosDisponiveis = new ArrayList<>(); //sugestao copilot nao sei se está bem
     private Produto searchProdutoPorCodigo(String codigo) {
         for (Produto produto : produtosDisponiveis) {
@@ -127,7 +127,7 @@ class GestaoFaturas {
 
     // Opção 2 - editar cliente
     public void editarCliente() {
-        Scanner scanner = new Scanner(System.in); //mano scanner de merdinha sempre a dar leak
+        Scanner scanner = new Scanner(System.in); //mano scanner de merdinha sempre a dar leak - passa por argumento neste metodo
 
         System.out.println("ID do cliente para Editar:");
         int id = scanner.nextInt();
@@ -175,14 +175,13 @@ class GestaoFaturas {
 
     // Opção 3 - listar clientes
     public void listarClientes() {
-        if (clientes.isEmpty()) {
-            System.out.println("Nenhum cliente adicionado na Database");
+        if (gestaoFaturas.isEmpty()) {
+            System.out.println("Não existem clientes registados!");
             return;
         }
-
-        for (Cliente cliente : clientes.values()) {
-            System.out.println(cliente.clienteToString());
-        }
+        for (List<Fatura> f : gestaoFaturas.values())
+            for (Fatura fatura : f) 
+                System.out.println(fatura.getCliente().clienteToString());
     }
 
     // Opção 4 - criar fatura
@@ -278,7 +277,8 @@ class GestaoFaturas {
         int opcaoEdicao = scanner.nextInt();
         scanner.nextLine();
         switch (opcaoEdicao) {
-            case 1: //editar data
+            case 1 -> {
+                //editar data
                 System.out.println("Novo dia:");
                 int novoDia = scanner.nextInt();
                 System.out.println("Novo mês:");
@@ -289,9 +289,10 @@ class GestaoFaturas {
     
                 faturaEdicao.setData(new Data(novoDia, novoMes, novoAno));
                 System.out.println("Data alterada com Sucesso!!");
-                break;
+            }
     
-            case 2: //editar produtos
+            case 2 -> {
+                //editar produtos
                 String adicionarProduto = "S";
                 while (adicionarProduto.equalsIgnoreCase("S")) {
                     System.out.println("Código do produto a adicionar ou remover:");
@@ -308,22 +309,18 @@ class GestaoFaturas {
                     System.out.println("Adicionar novo produto? (S/N)");
                     adicionarProduto = scanner.nextLine();
                 }
-                break;
+            }
     
-            case 3:
-                System.out.println("Edição foi Cancelada!");
-                break;
+            case 3 -> System.out.println("Edição foi Cancelada!");
     
-            default:
-                System.out.println("Opção inválida");
-                break;
+            default -> System.out.println("Opção inválida");
         }
     
         System.out.println("Fatura editada com sucesso!!");
         faturaEdicao.imprimirFatura();
     }
 
-    // Opção 6 - listar todas as faturas na aplicação
+    // Opção 6 - Listar todas as faturas na aplicação
     public void listarFaturas() {
         for (List<Fatura> listaFaturas : gestaoFaturas.values()) {
             for (Fatura fatura : listaFaturas) {
@@ -337,45 +334,33 @@ class GestaoFaturas {
         }
     }
 
-    // Opção 7 - visualizar fatura
-    public void visualizarFatura() {
-        Scanner scanner = new Scanner(System.in); //continua a dizer que tem leak do scanner
-        try {
-            System.out.println("Qual o id do cliente a que pertence a fatura ?");
-            int id = scanner.nextInt();
-            if (!gestaoFaturas.containsKey(id)) {
-                System.out.println("Cliente não existe.");
-                return;
-            }
-            System.out.println("Qual o número da fatura ?");
-            int numeroFatura = scanner.nextInt();
-            List<Fatura> faturas = gestaoFaturas.get(id);
-            boolean faturaExiste = false;
-    
-            for (Fatura f : faturas) {
-                if (f.getNumero() == numeroFatura) {
-                    f.imprimirFatura();
-                    faturaExiste = true;
-                    break;
-                }
-            }
-            if (!faturaExiste) System.out.println("Fatura não existe.");
-        } catch (InputMismatchException e) {
-            System.out.println("Input inválido");
-            scanner.nextLine(); // limpar buffer
+    // Opção 7 - Visualizar uma fatura específica
+    public void visualizarFatura(Scanner scanner) {
+        System.out.println("Qual o id do cliente a que pertence a fatura ?");
+        int id = scanner.nextInt();
+        if (!gestaoFaturas.containsKey(id)) {
+            System.out.println("Cliente não existe.");
+            return;
         }
+        System.out.println("Qual o número da fatura ?");
+        int numeroFatura = scanner.nextInt();
+        List<Fatura> faturas = gestaoFaturas.get(id);
+        boolean faturaExiste = false;
+        for (Fatura f : faturas)
+            if (f.getNumero() == numeroFatura) {
+                f.imprimirFatura();
+                faturaExiste = true;
+                break;
+            }
+        if (!faturaExiste) System.out.println("Fatura não existe.");
     }
 
-    // Opção 8 - estatísticas
+    // Opção 8 - Apresentar estatísticas
     public void estatisticas() {
-        int totalFaturas = 0; //iniciar 0 faturas 
-        for (List<Fatura> listaFaturas : gestaoFaturas.values()) {
-            totalFaturas += listaFaturas.size(); 
-        }
-        System.out.printf("Número de faturas: %d%n", totalFaturas); 
-
-        int totalProdutos = 0;
+        int totalFaturas = 0, totalProdutos = 0;
         double valorTotalSemIVA = 0.0, valorTotalComIVA = 0.0, valorTotalDoIVA = 0.0;
+        for (List<Fatura> listaFaturas : gestaoFaturas.values())
+            totalFaturas += listaFaturas.size();  
         for (List<Fatura> listaFaturas : gestaoFaturas.values())
             for (Fatura fatura : listaFaturas){
                 totalProdutos += fatura.getNumeroProdutos();
@@ -383,6 +368,7 @@ class GestaoFaturas {
                 valorTotalComIVA += fatura.calcularTotalComIVA();
                 valorTotalDoIVA += fatura.calcularTotalDoIVA();            
             }
+        System.out.printf("\nNúmero de faturas: %d%n", totalFaturas);
         System.out.printf("Número total de produtos: %d%n", totalProdutos);
         System.out.printf("Valor total sem IVA: %.2f%n", valorTotalSemIVA);
         System.out.printf("Valor total com IVA: %.2f%n", valorTotalComIVA);
