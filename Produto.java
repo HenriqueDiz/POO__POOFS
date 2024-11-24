@@ -15,7 +15,19 @@ abstract class Produto {
         return "Produto: " + nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
     }
 
-    public abstract double calcularIVA(String localizacao);
+    public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
+
+    public double calcularSemIVA() {
+        return quantidade * valorUnitario;
+    }
+
+    public double calcularComIVA(Cliente.Localizacao localizacao) {
+        return calcularSemIVA() * (1 + calcularTaxaIVA(localizacao));
+    }
+
+    public double calcularTotalDoIVA(Cliente.Localizacao localizacao) {
+        return calcularComIVA(localizacao) - calcularSemIVA();
+    }
 
     public String getNome() {return nome;} 
 

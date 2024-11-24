@@ -1,7 +1,7 @@
 class Cliente {
 
-    enum Localizacao{
-        portugalContinenal, madeira, açores
+    public enum Localizacao{
+        portugalContinental, madeira, açores
     }
 
     private Localizacao localizacao;
@@ -27,7 +27,7 @@ class Cliente {
 
     public void setContribuinte(int contribuinte) {this.contribuinte = contribuinte;}
 
-    public String getLocalizacao() {return localizacao.toString();}
+    public Localizacao getLocalizacao() {return localizacao;}
 
     public void setLocalizacao(Localizacao localizacao) {this.localizacao = localizacao;}
 

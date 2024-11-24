@@ -1,36 +1,28 @@
 class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
-    enum Categoria{
-        congelados, enlatados, vinhos;
+    enum CategoriaAlimentar{
+        congelados, enlatados, vinho;
     }
 
-    private Categoria categoria;
+    private CategoriaAlimentar categoria;
 
-    public ProdutoAlimentarTaxaIntermedia(String codigo, String nome, String descricao, int quantidade, double preco, boolean biologico, Categoria categoria) {
-        super(codigo, nome, descricao, quantidade, preco, biologico);
+    public ProdutoAlimentarTaxaIntermedia(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico, CategoriaAlimentar categoria) {
+        super(codigo, nome, descricao, quantidade, valorUnitario, biologico);
         this.categoria = categoria;
     }
 
-    public Categoria getCategoria() {return categoria;}
+    public CategoriaAlimentar getCategoria() {return categoria;}
 
-    public void setCategoria(Categoria categoria) {this.categoria = categoria;}
+    public void setCategoria(CategoriaAlimentar categoria) {this.categoria = categoria;}
 
     @Override
-    public double calcularIVA(String localizacao) {
-        double taxaBase;
-        switch (localizacao.toLowerCase()) {
-            case "madeira":
-                taxaBase = 12;
-                break;
-            case "açores":
-                taxaBase = 9;
-                break;
-            default:
-                taxaBase = 13;
-        }
-        
-        if (categoria == Categoria.vinhos) {
-            taxaBase += 1;
-        }
-        return taxaBase / 100; 
+    public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
+        int taxaBase = switch (localizacao) {
+            case portugalContinental -> 13;
+            case madeira -> 12;
+            case açores -> 9;
+        }; 
+        if (categoria == CategoriaAlimentar.vinho) taxaBase += 1;
+        if (biologico) taxaBase -= 10;
+        return taxaBase / 100.0;
     }
 }

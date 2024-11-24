@@ -1,22 +1,17 @@
 class ProdutoAlimentarTaxaNormal extends ProdutoAlimentar {
 
-    public ProdutoAlimentarTaxaNormal(String codigo, String nome, String descricao, int quantidade, double preco, boolean biologico) {
-        super(codigo, nome, descricao, quantidade, preco, biologico);
+    public ProdutoAlimentarTaxaNormal(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico) {
+        super(codigo, nome, descricao, quantidade, valorUnitario, biologico);
     }
 
     @Override
-    public double calcularIVA(String localizacao) {
-        double taxaBase;
-        switch (localizacao.toLowerCase()) {
-            case "madeira":
-                taxaBase = 22;
-                break;
-            case "açores":
-                taxaBase = 16;
-                break;
-            default: 
-                taxaBase = 23;
-        }
-        return taxaBase / 100;
+    public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
+        int taxaBase = switch (localizacao) {
+            case portugalContinental -> 23;
+            case madeira -> 22;
+            case açores -> 16;
+        }; 
+        if (biologico) taxaBase -= 10;
+        return taxaBase / 100.0;
     }
 }

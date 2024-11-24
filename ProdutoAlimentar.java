@@ -1,8 +1,8 @@
 abstract class ProdutoAlimentar extends Produto{
     protected boolean biologico;
 
-    public ProdutoAlimentar(String codigo, String nome, String descricao, int quantidade, double preco, boolean biologico) {
-        super(codigo, nome, descricao, quantidade, preco);
+    public ProdutoAlimentar(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico) {
+        super(codigo, nome, descricao, quantidade, valorUnitario);
         this.biologico = biologico;
     }
 

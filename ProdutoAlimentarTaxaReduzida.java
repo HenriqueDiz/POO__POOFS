@@ -9,12 +9,12 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
 
     private final Set<Certificacao> certificacao;
 
-    public ProdutoAlimentarTaxaReduzida(String codigo, String nome, String descricao, int quantidade, double preco, boolean biologico, int certificacaoBits) {
-        super(codigo, nome, descricao, quantidade, preco, biologico);
+    public ProdutoAlimentarTaxaReduzida(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico, int certificacaoBits) {
+        super(codigo, nome, descricao, quantidade, valorUnitario, biologico);
         this.certificacao = decodeCertificacao(certificacaoBits);
     }
 
-    private Set<Certificacao> decodeCertificacao(int certificacaoBits) { // São passados numeros do tipo 1001, 1010, 1100, etc (funciona ? pois boa questao)
+    private Set<Certificacao> decodeCertificacao(int certificacaoBits) {
         Set<Certificacao> certificacoes = EnumSet.noneOf(Certificacao.class);
         Certificacao[] values = Certificacao.values();
         for (int i = 0; i < values.length; i++)
@@ -24,21 +24,14 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
     }
 
     @Override
-    public double calcularIVA(String localizacao) {
-        double taxaBase;
-        switch (localizacao.toLowerCase()) {
-            case "madeira":
-                taxaBase = 5;
-                break;
-            case "açores":
-                taxaBase = 4;
-                break;
-            default: //ou seja continente
-                taxaBase = 6;
-        }
-        if (certificacao.size() == 4) {
-            taxaBase -= 1;
-        }
-        return taxaBase / 100; //pa ser percentagem
+    public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
+        int taxaBase = switch (localizacao) {
+            case portugalContinental -> 6;
+            case madeira -> 5;
+            case açores -> 4;
+        }; 
+        if (certificacao.size() == 4) taxaBase -= 1;
+        if (biologico) taxaBase -= 10;
+        return taxaBase / 100.0;
     }
 }
