@@ -14,9 +14,13 @@ class Cliente {
         this.localizacao = localizacao;
         this.id = id;
     }
-
     public String clienteToString(){
-        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacao.toString();
+        String localizacaoFormatada = switch (localizacao) {
+            case portugalContinental -> "Portugal Continental";
+            case madeira -> "Madeira";
+            case açores -> "Açores";
+        };
+        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada;
     }
 
     public String getNome() {return nome;}

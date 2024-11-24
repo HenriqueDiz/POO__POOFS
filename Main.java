@@ -36,14 +36,19 @@ public class Main {
             
             switch (opcao) {
                 case 1 -> {
+                    gestaoFaturas.criarCliente();
                 }
                 case 2 -> {
+                    gestaoFaturas.editarCliente();
                 }
                 case 3 -> {
+                    gestaoFaturas.listarClientes();
                 }
                 case 4 -> {
+                    gestaoFaturas.criarFatura();
                 }
-                case 5 -> {                        
+                case 5 -> {  
+                    gestaoFaturas.editarFatura();
                 }
                 case 6 -> {
                     gestaoFaturas.listarFaturas();
