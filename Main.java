@@ -2,31 +2,31 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        GestaoFaturas gestaoFaturas = new GestaoFaturas();
+        POOFS app = new POOFS();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\nMenu Principal:");
-            System.out.println("1. Criar Cliente");
-            System.out.println("2. Editar Cliente");
-            System.out.println("3. Criar Fatura");
-            System.out.println("4. Editar Fatura");
-            System.out.println("5. Listar Clientes");
-            System.out.println("6. Listar Faturas");
-            System.out.println("7. Estatísticas");
-            System.out.println("8. Sair");
+            System.out.println("\n1. Criar cliente");
+            System.out.println("2. Editar cliente");
+            System.out.println("3. Listar todos os clientes");
+            System.out.println("4. Criar fatura");
+            System.out.println("5. Editar fatura");
+            System.out.println("6. Listar todas as faturas");
+            System.out.println("7. Visualizar fatura");
+            System.out.println("8. Estatísticas");
+            System.out.println("9. Sair");
             System.out.println("Escolha uma opção: ");
             int opcao = Integer.parseInt(scanner.nextLine());
 
             switch (opcao) {
-                case 1 -> gestaoFaturas.criarCliente(scanner);
-                case 2 -> gestaoFaturas.editarCliente(scanner);
-                case 3 -> gestaoFaturas.listarClientes();
-                case 4 -> gestaoFaturas.criarFatura(scanner);
-                case 5 -> gestaoFaturas.editarFatura(scanner);
-                case 6 -> gestaoFaturas.listarFaturas();
-                case 7 -> gestaoFaturas.visualizarFatura(scanner);
-                case 8 -> gestaoFaturas.estatisticas();
+                case 1 -> app.criarCliente(scanner);
+                case 2 -> app.editarCliente(scanner);
+                case 3 -> app.listarClientes();
+                case 4 -> app.criarFatura(scanner);
+                case 5 -> app.editarFatura(scanner);
+                case 6 -> app.listarFaturas();
+                case 7 -> app.visualizarFatura(scanner);
+                case 8 -> app.estatisticas();
                 case 9 -> {
                     System.out.println("A sair do programa...");
                     return;

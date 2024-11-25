@@ -1,20 +1,20 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-class GestaoFaturas {
-    private final ArrayList<Cliente> clientes; //arraylist de clientes
+class POOFS {
+    private final List<Cliente> clientes;
 
-    public GestaoFaturas() {
-        this.clientes = new ArrayList<>(); //arraylist de clientes
+    public POOFS() {
+        this.clientes = new ArrayList<>();
     }
 
-
-    //Opção 1 - criar cliente
+    // Opção 1 - Criar cliente
     public void criarCliente(Scanner scanner) {
-        System.out.println("Nome do novo cliente:");
+        System.out.println("Nome do novo cliente: ");
         String nome = scanner.nextLine();
 
-        System.out.println("Nº de contribuinte:");
+        System.out.println("Nº de contribuinte: ");
         int contribuinte = Integer.parseInt(scanner.nextLine());
 
         System.out.println("Localização do novo cliente:");
@@ -30,36 +30,40 @@ class GestaoFaturas {
             default -> Cliente.Localizacao.portugalContinental;
         };
 
-        int id = clientes.size() + 1;
+        int id = 0;
+        do { 
+            id++;
+        } while (searchClientePorId(id) != null);
+
         Cliente novoCliente = new Cliente(nome, contribuinte, localizacao, id);
         clientes.add(novoCliente);
 
-        System.out.println("Cliente adicionado com Sucesso!! " + novoCliente.clienteToString());
+        System.out.println("Cliente adicionado com Sucesso!");
     }
 
 
-    //Opção 2 - editar cliente
+    // Opção 2 - Editar cliente
     public void editarCliente(Scanner scanner) {
-        System.out.println("ID do cliente para Editar:");
+        System.out.println("ID do cliente para Editar: ");
         int clienteId = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = searchClientePorId(clienteId);
 
+        Cliente cliente = searchClientePorId(clienteId);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        System.out.println("Editar Nome (atual: " + cliente.getNome() + "):");
+        System.out.println("Editar Nome (atual: " + cliente.getNome() + "): ");
         String novoNome = scanner.nextLine();
         cliente.setNome(novoNome.isEmpty() ? cliente.getNome() : novoNome);
 
-        System.out.println("Editar Nº de Contribuinte (atual: " + cliente.getContribuinte() + "):");
+        System.out.println("Editar Nº de Contribuinte (atual: " + cliente.getContribuinte() + "): ");
         String novoContribuinte = scanner.nextLine();
         if (!novoContribuinte.isEmpty()) {
             cliente.setContribuinte(Integer.parseInt(novoContribuinte));
         }
 
-        System.out.println("Editar Localização (1. Portugal Continental, 2. Madeira, 3. Açores):");
+        System.out.println("Editar Localização (1. Portugal Continental, 2. Madeira, 3. Açores): ");
         String novaLocalizacao = scanner.nextLine();
         if (!novaLocalizacao.isEmpty()) {
             Cliente.Localizacao localizacao = switch (Integer.parseInt(novaLocalizacao)) {
@@ -75,21 +79,20 @@ class GestaoFaturas {
     }
 
 
-    //Opção 3 - listar clientes
+    // Opção 3 - Listar clientes
     public void listarClientes() {
         if (clientes.isEmpty()) {
-            System.out.println("Não existem Clientes Registados!");
+            System.out.println("\nNão existem Clientes Registados!");
             return;
         }
-        for (Cliente cliente : clientes) {
-            System.out.println(cliente.clienteToString());
-        }
+        for (Cliente cliente : clientes)
+            System.out.println("\n" + cliente.clienteToString());
     }
 
 
-    //Opção 4 - criar fatura
+    // Opção 4 - Criar fatura
     public void criarFatura(Scanner scanner) {
-        System.out.println("ID do cliente para criar a fatura:");
+        System.out.println("ID do cliente para criar a fatura: ");
         int clienteId = Integer.parseInt(scanner.nextLine());
 
         Cliente cliente = searchClientePorId(clienteId);
@@ -98,67 +101,70 @@ class GestaoFaturas {
             return;
         }
 
-        System.out.println("Nº da fatura:");
+        System.out.println("Nº da fatura: ");
         int numeroFatura = Integer.parseInt(scanner.nextLine());
+        Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
+        if (fatura != null) {
+            System.out.println("Fatura já existe!");
+            return;
+        }
 
-        System.out.println("Dia da fatura:");
+        System.out.println("Dia da fatura: ");
         int dia = Integer.parseInt(scanner.nextLine());
-        System.out.println("Mês da fatura:");
+        System.out.println("Mês da fatura: ");
         int mes = Integer.parseInt(scanner.nextLine());
-        System.out.println("Ano da fatura:");
+        System.out.println("Ano da fatura: ");
         int ano = Integer.parseInt(scanner.nextLine());
 
         Data dataFatura = new Data(dia, mes, ano);
 
-        ArrayList<Produto> produtos = new ArrayList<>();
+        Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura); // criamos fatura aqui e depois basta usar o método da fatura - novaFatura.adicionarProduto(produto)
         String adicionarProduto;
         do {
-            System.out.println("Código do produto:");
-            String codigoProduto = scanner.nextLine();
-
-            Produto produto = searchProdutoPorCodigo(codigoProduto);
-            if (produto != null) {
-                produtos.add(produto);
-                System.out.println("Produto adicionado: " + produto.produtoToString());
-            } else {
-                System.out.println("Produto não encontrado!!");
-            }
-
-            System.out.println("Adicionar outro produto? (S/N)");
+            /* FALTA TERMINAR PROCESSO DE CRIAR FATURA - isto não pode ser feito aqui porque dependendo do tipo de produto diferentes atributos serao necessários
+            A minha sugestao: fazer como o IVA, temos um metodo abstrato na classe Produto que é implementado nas subclasses de cada produto,
+            e depois chamamos esse metodo para adicionar o produto
+            */
+            
+            // novaFatura.adicionarProduto(produto)
+            System.out.println("Adicionar outro produto (S/N) ? ");
             adicionarProduto = scanner.nextLine();
         } while (adicionarProduto.equalsIgnoreCase("S"));
 
-        Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura);
+
         cliente.addFatura(novaFatura);
 
         System.out.println("Fatura criada com sucesso para " + cliente.getNome());
     }
 
 
-    //Opção 5 - editar fatura
+    // Opção 5 - Editar fatura
     public void editarFatura(Scanner scanner) {
-        System.out.println("ID do cliente associado à fatura:");
-        int clienteId = Integer.parseInt(scanner.nextLine());
-        Cliente cliente = searchClientePorId(clienteId);
-
+        if (clientes.isEmpty()) {
+            System.out.println("\nNão há clientes registados na aplicação!");
+            return;
+        }
+        
+        System.out.println("ID do cliente associado à fatura: ");
+        int clienteID = Integer.parseInt(scanner.nextLine());
+        
+        Cliente cliente = searchClientePorId(clienteID);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        System.out.println("Número da fatura a editar:");
+        System.out.println("Nº da fatura que deseja editar: ");
         int numeroFatura = Integer.parseInt(scanner.nextLine());
 
-        Fatura fatura = cliente.getFaturas().stream()
-                .filter(f -> f.getNumero() == numeroFatura)
-                .findFirst()
-                .orElse(null);
-
+        Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura == null) {
             System.out.println("Fatura não encontrada!");
             return;
         }
 
+        /* FALTA TERMINAR PROCESSO DE EDITAR FATURA */
+        
         System.out.println("Editar Data da Fatura:");
         System.out.println("Novo Dia:");
         int dia = Integer.parseInt(scanner.nextLine());
@@ -173,95 +179,67 @@ class GestaoFaturas {
     }
 
 
-    //Opção6 - listar faturas
+    // Opção 6 - Listar faturas
     public void listarFaturas() {
-        for (Cliente cliente : clientes) {
-            for (Fatura fatura : cliente.getFaturas()) {
-                fatura.imprimirFatura(); //aproveitar metodo de imprimir maybe...
-            }
-        }
+        for (Cliente cliente : clientes)
+            for (Fatura fatura : cliente.getFaturas())
+                fatura.imprimirFaturaSimples();
     }
 
-
-    //Opção 7 - visualizar fatura
+    // Opção 7 - Visualizar uma fatura específica
     public void visualizarFatura(Scanner scanner) {
-        if (faturas.isEmpty()) {
-            System.out.println("Não há faturas!");
+        if (clientes.isEmpty()) {
+            System.out.println("\nNão há clientes registados na aplicação!");
             return;
         }
-        
-        System.out.println("Nº da fatura que deseja visualizar:");
-        int numeroFatura = scanner.nextInt();
-    
-        Fatura faturaEncontrada = null;
-        for (Fatura f : faturas) {
-            if (f.getNumero() == numeroFatura) {
-                faturaEncontrada = f;
-                break;
-            }
+
+        System.out.println("ID do cliente associado à fatura: ");
+        int clienteID = Integer.parseInt(scanner.nextLine());
+
+        Cliente cliente = searchClientePorId(clienteID);
+        if (cliente == null) {
+            System.out.println("\nCliente não encontrado!");
+            return;
         }
+
+        System.out.println("Nº da fatura que deseja visualizar: ");
+        int numeroFatura = Integer.parseInt(scanner.nextLine());
     
+        Fatura faturaEncontrada = cliente.searchFaturaNumero(numeroFatura);
         if (faturaEncontrada == null) {
-            System.out.println("Fatura não encontrada!!");
+            System.out.println("\nFatura não encontrada!");
             return;
         }
-    
-        System.out.println("\n============================");
-        System.out.println("Fatura nº: " + faturaEncontrada.getNumero());
-        System.out.println("Cliente: " + faturaEncontrada.getCliente().toString());
-        System.out.println("Data: " + faturaEncontrada.getData());
-        System.out.println("----------------------------");
-    
-        System.out.println("Produtos:");
-        ArrayList<Produto> produtos = faturaEncontrada.getProdutos();
-        if (produtos.isEmpty()) {
-            System.out.println("Nao há produtos nesta Fatura!");
-        } else {
-            for (Produto produto : produtos) {
-                System.out.println("\n" + produto.produtoToString());
-                System.out.printf("Valor Total do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
-                System.out.printf("Taxa de IVA do Produto: %.0f %%\n", produto.calcularTaxaIVA(faturaEncontrada.getCliente().getLocalizacao()) * 100);
-                System.out.printf("Valor do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(faturaEncontrada.getCliente().getLocalizacao()));
-                System.out.printf("Valor Total do Produto com IVA: %.2f\n", produto.calcularComIVA(faturaEncontrada.getCliente().getLocalizacao()));
+        faturaEncontrada.imprimirFaturaCompleta();
+    }
+
+    // Opção 8 - Apresentar estatísticas
+    public void estatisticas() {
+        int totalFaturas = 0, totalProdutos = 0;
+        double valorTotalSemIVA = 0.0, valorTotalComIVA = 0.0, valorTotalDoIVA = 0.0;
+        for (Cliente cliente : clientes) {
+            totalFaturas += cliente.getNumeroFaturas();
+            for (Fatura fatura : cliente.getFaturas()) {
+                totalProdutos += fatura.getNumeroProdutos();
+                valorTotalSemIVA += fatura.calcularTotalSemIVA();
+                valorTotalComIVA += fatura.calcularTotalComIVA();
+                valorTotalDoIVA += fatura.calcularTotalDoIVA();
             }
         }
-    
-        System.out.println("\n----------------------------");
-        System.out.printf("Total da Fatura sem IVA: %.2f\n", faturaEncontrada.calcularTotalSemIVA());
-        System.out.printf("Total de IVA da Fatura: %.2f\n", faturaEncontrada.calcularTotalDoIVA());
-        System.out.printf("Total da Fatura com IVA: %.2f\n", faturaEncontrada.calcularTotalComIVA());
-        System.out.println("============================\n");
+        System.out.printf("\nNúmero de faturas: %d%n", totalFaturas);
+        System.out.printf("Número total de produtos: %d%n", totalProdutos);
+        System.out.printf("Valor total sem IVA: %.2f%n", valorTotalSemIVA);
+        System.out.printf("Valor total com IVA: %.2f%n", valorTotalComIVA);
+        System.out.printf("Valor total do IVA: %.2f%n", valorTotalDoIVA);
     }
 
-
-    //Opção 8 - estatisticas
-    public void estatisticas() {
-        int totalClientes = clientes.size();
-        long totalFaturas = clientes.stream()
-                .flatMap(cliente -> cliente.getFaturas().stream())
-                .count();
-
-        System.out.println("Estatísticas:");
-        System.out.println("Total de Clientes: " + totalClientes);
-        System.out.println("Total de Faturas: " + totalFaturas);
-    }
-
+    // Função auxiliar para procurar um produto por código
     private Cliente searchClientePorId(int id) {
-        for (Cliente cliente : clientes) {
+        for (Cliente cliente : clientes)
             if (cliente.getId() == id) return cliente;
-        }
-        return null;
-    }
-
-    private Produto searchProdutoPorCodigo(String codigo) { //maybe remover isto...
-        //implementar procurar no arraylist de produtos
         return null;
     }
 }
-
-
-
-
     /*
     public void importarFaturas(String caminho) {
         try (BufferedReader br = new BufferedReader(new FileReader(caminho))) { // txt para clientes e faturas em binario maybe (so podemos usar 2 e em temos de usar os dois tipos)
@@ -307,6 +285,3 @@ class GestaoFaturas {
             System.out.println("Erro ao exportar faturas: " + e.getMessage());
         }
     }*/
-    
-    
-  

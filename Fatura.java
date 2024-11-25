@@ -1,36 +1,41 @@
 import java.util.ArrayList;
+import java.util.List;
 
 class Fatura {
     protected int numero;
     protected Cliente cliente;
     protected Data data;
-    protected ArrayList<Produto> produtos; //arraylist de produtos
+    protected List<Produto> produtos;
 
     public Fatura(int numero, Cliente cliente, Data data) {
         this.numero = numero;
         this.cliente = cliente;
         this.data = data;
-        this.produtos = new ArrayList<>(); //arraylist de produtos em cada fatura
+        this.produtos = new ArrayList<>();
     }
 
     public void adicionarProduto(Produto produto) {
         produtos.add(produto);
     }
 
-    public void imprimirFatura() {
+    public void imprimirFaturaCompleta() {
         System.out.println("\nFatura nº: " + numero);
         System.out.println("Cliente: " + cliente.toString() + "\n");
         listarProdutos();
-        System.out.printf("\n\nTotal do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
-        System.out.printf("Total sem IVA da Fatura: %.2f\n", calcularTotalSemIVA());
-        System.out.printf("Total com IVA da Fatura: %.2f\n\n", calcularTotalComIVA());
+        System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
+        System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
+        System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
+    }
+
+    public void imprimirFaturaSimples(){
+        System.out.println("\nFatura nº: " + numero);
+        System.out.println("Cliente: " + cliente.toString() + "\n");
+        System.out.println("Número de Produtos: " + getNumeroProdutos()); 
+        System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
+        System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
     }
 
     public void listarProdutos() {
-        if (produtos.isEmpty()) {
-            System.out.println("Fatura Sem Produtos...");
-            return;
-        }
         for (int i = 0; i < produtos.size(); i++) {
             Produto produto = produtos.get(i);
 
