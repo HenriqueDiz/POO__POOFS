@@ -11,16 +11,16 @@ class POOFS {
 
     // Opção 1 - Criar cliente
     public void criarCliente(Scanner scanner) {
-        System.out.println("Nome do novo cliente: ");
+        System.out.print("Nome do novo cliente: ");
         String nome = scanner.nextLine();
 
-        System.out.println("Nº de contribuinte: ");
+        System.out.print("Nº de contribuinte: ");
         int contribuinte = Integer.parseInt(scanner.nextLine());
 
-        System.out.println("Localização do novo cliente:");
         System.out.println("1. Portugal Continental");
         System.out.println("2. Madeira");
         System.out.println("3. Açores");
+        System.out.print("Localização do novo cliente: ");
         int opcao = Integer.parseInt(scanner.nextLine());
 
         Cliente.Localizacao localizacao = switch (opcao) {
@@ -44,7 +44,7 @@ class POOFS {
 
     // Opção 2 - Editar cliente
     public void editarCliente(Scanner scanner) {
-        System.out.println("ID do cliente para Editar: ");
+        System.out.print("ID do cliente para Editar: ");
         int clienteId = Integer.parseInt(scanner.nextLine());
 
         Cliente cliente = searchClientePorId(clienteId);
@@ -53,17 +53,17 @@ class POOFS {
             return;
         }
 
-        System.out.println("Editar Nome (atual: " + cliente.getNome() + "): ");
+        System.out.print("Editar Nome (atual: " + cliente.getNome() + "): ");
         String novoNome = scanner.nextLine();
         cliente.setNome(novoNome.isEmpty() ? cliente.getNome() : novoNome);
 
-        System.out.println("Editar Nº de Contribuinte (atual: " + cliente.getContribuinte() + "): ");
+        System.out.print("Editar Nº de Contribuinte (atual: " + cliente.getContribuinte() + "): ");
         String novoContribuinte = scanner.nextLine();
         if (!novoContribuinte.isEmpty()) {
             cliente.setContribuinte(Integer.parseInt(novoContribuinte));
         }
 
-        System.out.println("Editar Localização (1. Portugal Continental, 2. Madeira, 3. Açores): ");
+        System.out.print("Editar Localização (1. Portugal Continental, 2. Madeira, 3. Açores): ");
         String novaLocalizacao = scanner.nextLine();
         if (!novaLocalizacao.isEmpty()) {
             Cliente.Localizacao localizacao = switch (Integer.parseInt(novaLocalizacao)) {
@@ -92,7 +92,7 @@ class POOFS {
 
     // Opção 4 - Criar fatura
     public void criarFatura(Scanner scanner) {
-        System.out.println("ID do cliente para criar a fatura: ");
+        System.out.print("ID do cliente para criar a fatura: ");
         int clienteId = Integer.parseInt(scanner.nextLine());
 
         Cliente cliente = searchClientePorId(clienteId);
@@ -101,7 +101,7 @@ class POOFS {
             return;
         }
 
-        System.out.println("Nº da fatura: ");
+        System.out.print("Nº da fatura: ");
         int numeroFatura = Integer.parseInt(scanner.nextLine());
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura != null) {
@@ -109,11 +109,11 @@ class POOFS {
             return;
         }
 
-        System.out.println("Dia da fatura: ");
+        System.out.print("Dia da fatura: ");
         int dia = Integer.parseInt(scanner.nextLine());
-        System.out.println("Mês da fatura: ");
+        System.out.print("Mês da fatura: ");
         int mes = Integer.parseInt(scanner.nextLine());
-        System.out.println("Ano da fatura: ");
+        System.out.print("Ano da fatura: ");
         int ano = Integer.parseInt(scanner.nextLine());
 
         Data dataFatura = new Data(dia, mes, ano);
@@ -127,7 +127,7 @@ class POOFS {
             */
             
             // novaFatura.adicionarProduto(produto)
-            System.out.println("Adicionar outro produto (S/N) ? ");
+            System.out.print("Adicionar outro produto (S/N) ? ");
             adicionarProduto = scanner.nextLine();
         } while (adicionarProduto.equalsIgnoreCase("S"));
 
@@ -145,7 +145,7 @@ class POOFS {
             return;
         }
         
-        System.out.println("ID do cliente associado à fatura: ");
+        System.out.print("ID do cliente associado à fatura: ");
         int clienteID = Integer.parseInt(scanner.nextLine());
         
         Cliente cliente = searchClientePorId(clienteID);
@@ -154,7 +154,7 @@ class POOFS {
             return;
         }
 
-        System.out.println("Nº da fatura que deseja editar: ");
+        System.out.print("Nº da fatura que deseja editar: ");
         int numeroFatura = Integer.parseInt(scanner.nextLine());
 
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
@@ -181,9 +181,13 @@ class POOFS {
 
     // Opção 6 - Listar faturas
     public void listarFaturas() {
+        boolean flag = false;
         for (Cliente cliente : clientes)
-            for (Fatura fatura : cliente.getFaturas())
+            for (Fatura fatura : cliente.getFaturas()){
+                flag = true;
                 fatura.imprimirFaturaSimples();
+            }
+        if (!flag) System.out.println("\nNão existem faturas registadas!");
     }
 
     // Opção 7 - Visualizar uma fatura específica
@@ -193,7 +197,7 @@ class POOFS {
             return;
         }
 
-        System.out.println("ID do cliente associado à fatura: ");
+        System.out.print("ID do cliente associado à fatura: ");
         int clienteID = Integer.parseInt(scanner.nextLine());
 
         Cliente cliente = searchClientePorId(clienteID);
@@ -202,7 +206,7 @@ class POOFS {
             return;
         }
 
-        System.out.println("Nº da fatura que deseja visualizar: ");
+        System.out.print("Nº da fatura que deseja visualizar: ");
         int numeroFatura = Integer.parseInt(scanner.nextLine());
     
         Fatura faturaEncontrada = cliente.searchFaturaNumero(numeroFatura);
