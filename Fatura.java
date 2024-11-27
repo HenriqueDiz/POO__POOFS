@@ -19,19 +19,14 @@ class Fatura implements Serializable {
         produtos.add(produto);
     }
 
-    public void imprimirFaturaCompleta() {
+    public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
         System.out.println("\nFatura nº: " + numero);
         System.out.println("Cliente: " + cliente.toString() + "\n");
-        listarProdutos();
-        System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
-        System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
-        System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
-    }
-
-    public void imprimirFaturaSimples(){
-        System.out.println("\nFatura nº: " + numero);
-        System.out.println("Cliente: " + cliente.toString() + "\n");
-        System.out.println("Número de Produtos: " + getNumeroProdutos()); 
+        if (detalhada){
+            listarProdutos();
+            System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
+        }
+        else System.out.println("Número de Produtos: " + getNumeroProdutos());
         System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
         System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
     }
@@ -42,10 +37,10 @@ class Fatura implements Serializable {
 
             System.out.println("\nProduto " + (i + 1) + ":");
             System.out.println(produto.produtoToString());
-            System.out.printf("Valor Total do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
-            System.out.printf("Valor Total do Produto com IVA: %.2f\n", produto.calcularComIVA(cliente.getLocalizacao()));
-            System.out.printf("Valor Total do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(cliente.getLocalizacao()));
-            System.out.printf("Taxa de IVA do Produto: %.0f %%\n", produto.calcularTaxaIVA(cliente.getLocalizacao()) * 100);
+            System.out.printf("Valor do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
+            System.out.printf("Valor do Produto com IVA: %.2f\n", produto.calcularComIVA(cliente.getLocalizacao()));
+            System.out.printf("Valor do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(cliente.getLocalizacao()));
+            System.out.printf("Taxa do IVA do Produto: %.0f %%\n", produto.calcularTaxaIVA(cliente.getLocalizacao()) * 100);
         }
     }
 

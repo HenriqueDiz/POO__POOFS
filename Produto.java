@@ -32,7 +32,7 @@ abstract class Produto implements Serializable {
     }
 
 
-    public abstract String obterSigla(); //metodo p siglas
+    public abstract String obterSigla();
 
     public String getNome() {return nome;} 
 

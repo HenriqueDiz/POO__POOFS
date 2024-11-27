@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileInputStream;
-//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,123 +15,7 @@ class POOFS {
         this.clientes = new ArrayList<>();
     }
 
-    //ler txt
-    public void loadTxt(String filePath) {
-        try (Scanner scanner = new Scanner(new File(filePath))) {
-        } catch (IOException e) {
-            System.out.println("Erro a ler ficheiro: " + e.getMessage());
-        }
-    }   
-
-    //ler bin
-    public void loadBin(String filePath) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
-            int tamanhoClientes = in.readInt(); // num clientes no ficheiro
-            for (int i = 0; i < tamanhoClientes; i++) {
-                //input cliente
-                Cliente cliente = (Cliente) in.readObject();
-                clientes.add(cliente);
-    
-                int tamanhoFaturas = in.readInt(); // num faturas de cada cliente
-                for (int j = 0; j < tamanhoFaturas; j++) {
-                    //input fatura
-                    Fatura fatura = (Fatura) in.readObject();
-                    cliente.addFatura(fatura);
-    
-                    int tamanhoProdutos = in.readInt(); // num produtos da fatura
-                    for (int k = 0; k < tamanhoProdutos; k++) {
-                        //input produto com base na sigla
-                        String sigla = in.readUTF(); // sogla produto
-                        Produto produto = null;
-    
-                        switch (sigla) { //maybe implementar switch case para as siglas 
-                            case "PAI" -> { //taxa intermedia
-                                String codigo = in.readUTF();
-                                String nome = in.readUTF();
-                                String descricao = in.readUTF();
-                                int quantidade = in.readInt();
-                                double valorUnitario = in.readDouble();
-                                boolean biologico = in.readBoolean();
-                                ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria =
-                                    ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(in.readUTF());
-                                produto = new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, biologico, categoria);
-                            }
-                            case "PAN" -> { //taxa normal
-                                String codigo = in.readUTF();
-                                String nome = in.readUTF();
-                                String descricao = in.readUTF();
-                                int quantidade = in.readInt();
-                                double valorUnitario = in.readDouble();
-                                boolean biologico = in.readBoolean();
-                                produto = new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, biologico);
-                            }
-
-                            case "PAR" -> { //taxa reduzida
-                                String codigo = in.readUTF();
-                                String nome = in.readUTF();
-                                String descricao = in.readUTF();
-                                int quantidade = in.readInt();
-                                double valorUnitario = in.readDouble();
-                                boolean biologico = in.readBoolean();
-                                ProdutoAlimentarTaxaReduzida.Certificacao certificacao =
-                                    ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(in.readUTF());
-                                produto = new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, biologico, certificacao); //pq isto esta a dar erro crl...
-                            }
-                            case "PFCP" -> { //taxa farmacia com prescricao
-                                String codigo = in.readUTF();
-                                String nome = in.readUTF();
-                                String descricao = in.readUTF();
-                                int quantidade = in.readInt();
-                                double valorUnitario = in.readDouble();
-                                String prescricao = in.readUTF();
-                                String medico = in.readUTF();
-                                produto = new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, prescricao, medico);
-                            }
-
-                            case "PFSP" -> { //taxa farmacia sem prescricao
-                                String codigo = in.readUTF();
-                                String nome = in.readUTF();
-                                String descricao = in.readUTF();
-                                int quantidade = in.readInt();
-                                double valorUnitario = in.readDouble();
-                                ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoriaFarmacia =
-                                    ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(in.readUTF());
-                                produto = new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, categoriaFarmacia);
-                            }
-
-
-
-                            default -> System.out.println("Sigla não reconhecida!! " + sigla);
-                        }
-    
-                        if (produto != null) {
-                            fatura.adicionarProduto(produto);
-                        }
-                    }
-                }
-            }
-    
-            System.out.println("Dados carregados do Ficheiro Bin com sucesso!!");
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Erro ao carregar dados... " + e.getMessage());
-        }
-    }
-    
-    
-    //save bin q vamos adicionar em cada criar ou editar
-    public void saveDados() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
-            out.writeInt(clientes.size()); // write tamanho da lista de clientes
-            for (Cliente cliente : clientes) {
-                out.writeObject(cliente); // cliente deve implementar Serializable
-            }
-            System.out.println("Dados guardados!");
-        } catch (IOException e) {
-            System.err.println("Erro ao guardar dados: " + e.getMessage());
-        }
-    }    
-
-    
+    // ------------------------------ Métodos da Aplicação ------------------------------
 
     // Opção 1 - Criar cliente
     public void criarCliente(Scanner scanner) {
@@ -161,7 +44,7 @@ class POOFS {
         clientes.add(novoCliente);
 
         System.out.println("Cliente adicionado com Sucesso!");
-        saveDados();
+        exportBin();
     }
 
 
@@ -199,7 +82,7 @@ class POOFS {
         }
 
         System.out.println("Cliente atualizado com sucesso!");
-        saveDados();
+        exportBin();
     }
 
 
@@ -259,7 +142,7 @@ class POOFS {
         cliente.addFatura(novaFatura);
 
         System.out.println("Fatura criada com sucesso para " + cliente.getNome());
-        saveDados();
+        exportBin();
     }
 
 
@@ -301,7 +184,7 @@ class POOFS {
         fatura.setData(new Data(dia, mes, ano));
 
         System.out.println("Fatura editada com sucesso!");
-        saveDados();
+        exportBin();
     }
 
 
@@ -311,7 +194,7 @@ class POOFS {
         for (Cliente cliente : clientes)
             for (Fatura fatura : cliente.getFaturas()){
                 flag = true;
-                fatura.imprimirFaturaSimples();
+                fatura.imprimirFatura(false);
             }
         if (!flag) System.out.println("\nNão existem faturas registadas!");
     }
@@ -340,7 +223,7 @@ class POOFS {
             System.out.println("\nFatura não encontrada!");
             return;
         }
-        faturaEncontrada.imprimirFaturaCompleta();
+        faturaEncontrada.imprimirFatura(true);
     }
 
     // Opção 8 - Apresentar estatísticas
@@ -363,6 +246,61 @@ class POOFS {
         System.out.printf("Valor total do IVA: %.2f%n", valorTotalDoIVA);
     }
 
+    // ------------------------------ Métodos para Exportar e Importar os Dados da Aplicação POOFS ------------------------------
+
+    // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
+    public void loadTxt(String filePath) {
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            // TODO: Implementar este método
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar dados... " + e.getMessage());
+        }
+    }   
+
+    // Método para carregar os dados de um ficheiro binário (2º Vez em diante que o programa é executado)
+    public void loadBin(String filePath) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+            int tamanhoClientes = in.readInt();
+            for (int i = 0; i < tamanhoClientes; i++) {
+                Cliente cliente = (Cliente) in.readObject();     // EU ACHO QUE ESTE MÉTODO FUNCIONA ("big acho lol" - caso contrário restaurar o commit anterior)
+                int tamanhoFaturas = in.readInt();
+                for (int j = 0; j < tamanhoFaturas; j++) {
+                    Fatura fatura = (Fatura) in.readObject();
+                    int tamanhoProdutos = in.readInt();
+                    for (int k = 0; k < tamanhoProdutos; k++) {
+                        String sigla = in.readUTF();
+                        Produto produto = null;
+                        switch (sigla) {
+                            case "PAI" -> {produto = (ProdutoAlimentarTaxaIntermedia) in.readObject();}
+                            case "PAN" -> {produto = (ProdutoAlimentarTaxaNormal) in.readObject();}
+                            case "PAR" -> {produto = (ProdutoAlimentarTaxaReduzida) in.readObject();}
+                            case "PFCP" -> {produto = (ProdutoFarmaciaComPrescricao) in.readObject();}
+                            case "PFSP" -> {produto = (ProdutoFarmaciaSemPrescricao) in.readObject();}
+                        }
+                        fatura.adicionarProduto(produto);
+                    }
+                    cliente.addFatura(fatura);
+                }
+                clientes.add(cliente);
+            }
+            System.out.println("Dados carregados do Ficheiro Bin com sucesso!!");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar dados... " + e.getMessage());
+        }
+    }   
+
+    // Função para guardar os dados em binário
+    public void exportBin() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
+            out.writeInt(clientes.size());
+            for (Cliente cliente : clientes)
+                out.writeObject(cliente);   // TODO: Reescrever este método porque não está a escrever as siglas dos produtos
+            System.out.println("Dados guardados!");
+        } catch (IOException e) {
+            System.err.println("Erro ao guardar dados: " + e.getMessage());
+        }
+    }    
+
     // Função auxiliar para procurar um produto por código
     private Cliente searchClientePorId(int id) {
         for (Cliente cliente : clientes)
@@ -370,48 +308,3 @@ class POOFS {
         return null;
     }
 }
-    /*
-    public void importarFaturas(String caminho) {
-        try (BufferedReader br = new BufferedReader(new FileReader(caminho))) { // txt para clientes e faturas em binario maybe (so podemos usar 2 e em temos de usar os dois tipos)
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(";");
-                int clienteId = Integer.parseInt(dados[0]);
-                Cliente cliente = buscarClientePorId(clienteId);
-                if (cliente == null) continue;
-
-                Fatura fatura = new Fatura(Integer.parseInt(dados[1]), cliente, new Data(1, 1, 2024));
-                for (int i = 2; i < dados.length; i += 4) {
-                    String tipoProduto = dados[i];
-                    // Produto creation logic (skipped here)
-                }
-                adicionarFatura(clienteId, fatura);
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao importar faturas: " + e.getMessage());
-        }
-    }*/
-
-    /*
-    private Cliente buscarClientePorId(int id) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getId() == id) return cliente;
-        }
-        return null;
-    }*/
-    /*
-    public void exportarFaturas(String caminho) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(caminho))) {
-            for (Map.Entry<Integer, List<Fatura>> entry : faturasPorCliente.entrySet()) {
-                for (Fatura fatura : entry.getValue()) {
-                    bw.write(entry.getKey() + ";" + fatura.getNumero() + ";" + fatura.getData());
-                    for (Produto produto : fatura.getProdutos()) {
-                        bw.write(";" + produto.getNome() + ";" + produto.getQuantidade() + ";" + produto.getValorUnitario());
-                    }
-                    bw.newLine();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao exportar faturas: " + e.getMessage());
-        }
-    }*/

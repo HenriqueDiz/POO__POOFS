@@ -11,11 +11,9 @@ public class Main {
         POOFS app = new POOFS();
         Scanner scanner = new Scanner(System.in);
         
-        //ciclo geral de loading no Projeto
-        if(binFileExists("dados.bin")){
-            app.loadBin("dados.bin"); //load bin
-        }else{ app.loadTxt("dados.txt");}//se nao existir ainda, ent é a 1a vez, logo load txt
-
+        // Ciclo geral de loading no Projeto
+        if (binFileExists("dados.bin")) app.loadBin("dados.bin");  // Load bin se existir
+        else app.loadTxt("poofs.txt");                             // Se não existir ainda, então é a primeira vez, logo load txt
 
         while (true) {
             System.out.println("\n1. Criar cliente");

@@ -7,19 +7,19 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
         ISO22000, FSSC22000, HACCP, GMP
     }
 
-    private final Set<Certificacao> certificacao;
+    private final Set<Certificacao> certificacoes;
 
     public ProdutoAlimentarTaxaReduzida(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico, int certificacaoBits) {
         super(codigo, nome, descricao, quantidade, valorUnitario, biologico);
-        this.certificacao = decodeCertificacao(certificacaoBits);
+        this.certificacoes = decodeCertificacao(certificacaoBits);
     }
 
     private Set<Certificacao> decodeCertificacao(int certificacaoBits) {
-        Set<Certificacao> certificacoes = EnumSet.noneOf(Certificacao.class);
+        Set<Certificacao> certifi = EnumSet.noneOf(Certificacao.class);
         Certificacao[] values = Certificacao.values();
         for (int i = 0; i < values.length; i++)
             if ((certificacaoBits & (1 << i)) != 0) 
-                certificacoes.add(values[i]);
+                certifi.add(values[i]);
         return certificacoes;
     }
 
@@ -30,8 +30,9 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
             case madeira -> 5;
             case açores -> 4;
         }; 
-        if (certificacao.size() == 4) taxaBase -= 1;
+        if (certificacoes.size() == 4) taxaBase -= 1;
         if (biologico) taxaBase -= 10;
+        if (taxaBase < 0) taxaBase = 0;
         return taxaBase / 100.0;
     }
 
@@ -40,10 +41,10 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
         return "PAR"; 
     }
 
-    public Set<Certificacao> getCertificacao() {return certificacao;}
+    public Set<Certificacao> getCertificacoes() {return certificacoes;}
 
-    public void setCertificacao(int certificacaoBits) {
-        this.certificacao.clear();
-        this.certificacao.addAll(decodeCertificacao(certificacaoBits));
+    public void setCertificacoes(int certificacaoBits) {
+        this.certificacoes.clear();
+        this.certificacoes.addAll(decodeCertificacao(certificacaoBits));
     }
 }

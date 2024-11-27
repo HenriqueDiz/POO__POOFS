@@ -23,6 +23,7 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
         }; 
         if (categoria == CategoriaAlimentar.vinho) taxaBase += 1;
         if (biologico) taxaBase -= 10;
+        if (taxaBase < 0) taxaBase = 0;
         return taxaBase / 100.0;
     }
 
