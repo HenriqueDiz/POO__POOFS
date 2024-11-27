@@ -14,4 +14,9 @@ class ProdutoAlimentarTaxaNormal extends ProdutoAlimentar {
         if (biologico) taxaBase -= 10;
         return taxaBase / 100.0;
     }
+
+    @Override
+    public String obterSigla() {
+        return "PAN"; 
+    }
 }

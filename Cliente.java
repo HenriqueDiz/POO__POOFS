@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Cliente {
+class Cliente implements Serializable{
 
     public enum Localizacao {
         portugalContinental, madeira, açores

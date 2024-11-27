@@ -1,4 +1,6 @@
-abstract class Produto {
+import java.io.Serializable;
+
+abstract class Produto implements Serializable {
     protected String codigo, nome, descricao;
     protected double valorUnitario;
     protected int quantidade;
@@ -28,6 +30,9 @@ abstract class Produto {
     public double calcularTotalDoIVA(Cliente.Localizacao localizacao) {
         return calcularComIVA(localizacao) - calcularSemIVA();
     }
+
+
+    public abstract String obterSigla(); //metodo p siglas
 
     public String getNome() {return nome;} 
 

@@ -1,3 +1,10 @@
+import java.io.File;
+import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +15,124 @@ class POOFS {
     public POOFS() {
         this.clientes = new ArrayList<>();
     }
+
+    //ler txt
+    public void loadTxt(String filePath) {
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+        } catch (IOException e) {
+            System.out.println("Erro a ler ficheiro: " + e.getMessage());
+        }
+    }   
+
+    //ler bin
+    public void loadBin(String filePath) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+            int tamanhoClientes = in.readInt(); // num clientes no ficheiro
+            for (int i = 0; i < tamanhoClientes; i++) {
+                //input cliente
+                Cliente cliente = (Cliente) in.readObject();
+                clientes.add(cliente);
+    
+                int tamanhoFaturas = in.readInt(); // num faturas de cada cliente
+                for (int j = 0; j < tamanhoFaturas; j++) {
+                    //input fatura
+                    Fatura fatura = (Fatura) in.readObject();
+                    cliente.addFatura(fatura);
+    
+                    int tamanhoProdutos = in.readInt(); // num produtos da fatura
+                    for (int k = 0; k < tamanhoProdutos; k++) {
+                        //input produto com base na sigla
+                        String sigla = in.readUTF(); // sogla produto
+                        Produto produto = null;
+    
+                        switch (sigla) { //maybe implementar switch case para as siglas 
+                            case "PAI" -> { //taxa intermedia
+                                String codigo = in.readUTF();
+                                String nome = in.readUTF();
+                                String descricao = in.readUTF();
+                                int quantidade = in.readInt();
+                                double valorUnitario = in.readDouble();
+                                boolean biologico = in.readBoolean();
+                                ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria =
+                                    ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(in.readUTF());
+                                produto = new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, biologico, categoria);
+                            }
+                            case "PAN" -> { //taxa normal
+                                String codigo = in.readUTF();
+                                String nome = in.readUTF();
+                                String descricao = in.readUTF();
+                                int quantidade = in.readInt();
+                                double valorUnitario = in.readDouble();
+                                boolean biologico = in.readBoolean();
+                                produto = new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, biologico);
+                            }
+
+                            case "PAR" -> { //taxa reduzida
+                                String codigo = in.readUTF();
+                                String nome = in.readUTF();
+                                String descricao = in.readUTF();
+                                int quantidade = in.readInt();
+                                double valorUnitario = in.readDouble();
+                                boolean biologico = in.readBoolean();
+                                ProdutoAlimentarTaxaReduzida.Certificacao certificacao =
+                                    ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(in.readUTF());
+                                produto = new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, biologico, certificacao); //pq isto esta a dar erro crl...
+                            }
+                            case "PFCP" -> { //taxa farmacia com prescricao
+                                String codigo = in.readUTF();
+                                String nome = in.readUTF();
+                                String descricao = in.readUTF();
+                                int quantidade = in.readInt();
+                                double valorUnitario = in.readDouble();
+                                String prescricao = in.readUTF();
+                                String medico = in.readUTF();
+                                produto = new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, prescricao, medico);
+                            }
+
+                            case "PFSP" -> { //taxa farmacia sem prescricao
+                                String codigo = in.readUTF();
+                                String nome = in.readUTF();
+                                String descricao = in.readUTF();
+                                int quantidade = in.readInt();
+                                double valorUnitario = in.readDouble();
+                                ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoriaFarmacia =
+                                    ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(in.readUTF());
+                                produto = new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, categoriaFarmacia);
+                            }
+
+
+
+                            default -> System.out.println("Sigla não reconhecida!! " + sigla);
+                        }
+    
+                        if (produto != null) {
+                            fatura.adicionarProduto(produto);
+                        }
+                    }
+                }
+            }
+    
+            System.out.println("Dados carregados do Ficheiro Bin com sucesso!!");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar dados... " + e.getMessage());
+        }
+    }
+    
+    
+    //save bin q vamos adicionar em cada criar ou editar
+    public void saveDados() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
+            out.writeInt(clientes.size()); // write tamanho da lista de clientes
+            for (Cliente cliente : clientes) {
+                out.writeObject(cliente); // cliente deve implementar Serializable
+            }
+            System.out.println("Dados guardados!");
+        } catch (IOException e) {
+            System.err.println("Erro ao guardar dados: " + e.getMessage());
+        }
+    }    
+
+    
 
     // Opção 1 - Criar cliente
     public void criarCliente(Scanner scanner) {
@@ -30,15 +155,13 @@ class POOFS {
             default -> Cliente.Localizacao.portugalContinental;
         };
 
-        int id = 0;
-        do { 
-            id++;
-        } while (searchClientePorId(id) != null);
+        int id = clientes.size() + 1;
 
         Cliente novoCliente = new Cliente(nome, contribuinte, localizacao, id);
         clientes.add(novoCliente);
 
         System.out.println("Cliente adicionado com Sucesso!");
+        saveDados();
     }
 
 
@@ -76,6 +199,7 @@ class POOFS {
         }
 
         System.out.println("Cliente atualizado com sucesso!");
+        saveDados();
     }
 
 
@@ -135,6 +259,7 @@ class POOFS {
         cliente.addFatura(novaFatura);
 
         System.out.println("Fatura criada com sucesso para " + cliente.getNome());
+        saveDados();
     }
 
 
@@ -176,6 +301,7 @@ class POOFS {
         fatura.setData(new Data(dia, mes, ano));
 
         System.out.println("Fatura editada com sucesso!");
+        saveDados();
     }
 
 

@@ -35,6 +35,11 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
         return taxaBase / 100.0;
     }
 
+    @Override
+    public String obterSigla() {
+        return "PAR"; 
+    }
+
     public Set<Certificacao> getCertificacao() {return certificacao;}
 
     public void setCertificacao(int certificacaoBits) {

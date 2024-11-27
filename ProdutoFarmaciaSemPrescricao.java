@@ -21,4 +21,9 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
         if (categoriaFarmacia == CategoriaFarmacia.animais) taxaBase -= 1;
         return taxaBase / 100.0;
     }
+
+    @Override
+    public String obterSigla() {
+        return "PFSP"; 
+    }
 }

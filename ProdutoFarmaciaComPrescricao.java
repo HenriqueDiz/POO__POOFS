@@ -25,4 +25,9 @@ class ProdutoFarmaciaComPrescricao extends Produto{
         }; 
         return taxaBase / 100.0;
     }
+
+    @Override
+    public String obterSigla() {
+        return "PFCP"; 
+    }
 }
