@@ -124,16 +124,16 @@ class POOFS {
         int ano = Integer.parseInt(scanner.nextLine());
 
         Data dataFatura = new Data(dia, mes, ano);
-
         Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura); // criamos fatura aqui e depois basta usar o método da fatura - novaFatura.adicionarProduto(produto)
+        
         String adicionarProduto;
         do {
-            /* FALTA TERMINAR PROCESSO DE CRIAR FATURA - isto não pode ser feito aqui porque dependendo do tipo de produto diferentes atributos serao necessários
-            A minha sugestao: fazer como o IVA, temos um metodo abstrato na classe Produto que é implementado nas subclasses de cada produto,
-            e depois chamamos esse metodo para adicionar o produto
-            */
-            
-            // novaFatura.adicionarProduto(produto)
+            Produto produto = adicionarProdutoPorTipo(produto, tipo); // sketch metodo adicionarProdutoPorTipo que meti no Produto.java
+            if(produto != null) {
+                novaFatura.adicionarProduto(produto);
+                System.out.println("Produto adicionado com sucesso!");
+            }
+
             System.out.print("Adicionar outro produto (S/N) ? ");
             adicionarProduto = scanner.nextLine();
         } while (adicionarProduto.equalsIgnoreCase("S"));
@@ -171,8 +171,7 @@ class POOFS {
             return;
         }
 
-        /* FALTA TERMINAR PROCESSO DE EDITAR FATURA */
-        
+        //editar data da fatura
         System.out.println("Editar Data da Fatura:");
         System.out.println("Novo Dia:");
         int dia = Integer.parseInt(scanner.nextLine());
@@ -180,13 +179,60 @@ class POOFS {
         int mes = Integer.parseInt(scanner.nextLine());
         System.out.println("Novo Ano:");
         int ano = Integer.parseInt(scanner.nextLine());
-
         fatura.setData(new Data(dia, mes, ano));
+
+        //editar produtos da fatura (sketch still needs work)
+        System.out.println("Editar Produtos da Fatura:");
+        System.out.println("1. Adicionar Produto");
+        System.out.println("2. Remover Produto");
+        System.out.println("3. Editar Produto");
+        int opcao = Integer.parseInt(scanner.nextLine());
+        switch (opcao) {
+            case 1 -> {
+                Produto produto = adicionarProdutoPorTipo(produto, tipo); // sketch metodo adicionarProdutoPorTipo que meti no Produto.java
+                if(produto != null) {
+                    fatura.adicionarProduto(produto);
+                    System.out.println("Produto adicionado com sucesso!");
+                }
+            }
+            case 2 -> {
+                System.out.print("Código do Produto a remover: ");
+                String codigo = scanner.nextLine();
+                fatura.removerProduto(-indice do produto a remover-); //5AM coding be like...
+            }
+            case 3 -> {
+                System.out.print("Código do Produto a editar: ");
+                String codigo = scanner.nextLine();
+                Produto produto = fatura.searchProdutoPorCodigo(-codigo-); //mas o que é que eu estou a fazer aqui :(
+                if (produto == null) {
+                    System.out.println("Produto não encontrado!");
+                    return;
+                }
+                System.out.print("Editar Nome (atual: " + produto.getNome() + "): ");
+                String novoNome = scanner.nextLine();
+                produto.setNome(novoNome.isEmpty() ? produto.getNome() : novoNome);
+
+                System.out.print("Editar Descrição (atual: " + produto.getDescricao() + "): ");
+                String novaDescricao = scanner.nextLine();
+                produto.setDescricao(novaDescricao.isEmpty() ? produto.getDescricao() : novaDescricao);
+
+                System.out.print("Editar Quantidade (atual: " + produto.getQuantidade() + "): ");
+                String novaQuantidade = scanner.nextLine();
+                if (!novaQuantidade.isEmpty()) {
+                    produto.setQuantidade(Integer.parseInt(novaQuantidade));
+                }
+
+                System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
+                String novoValorUnitario = scanner.nextLine();
+                if (!novoValorUnitario.isEmpty()) {
+                    produto.setValorUnitario(Double.parseDouble(novoValorUnitario));
+                }
+            }
+        }
 
         System.out.println("Fatura editada com sucesso!");
         exportBin();
     }
-
 
     // Opção 6 - Listar faturas
     public void listarFaturas() {
@@ -251,7 +297,21 @@ class POOFS {
     // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
     public void loadTxt(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
-            // TODO: Implementar este método
+            while(scanner.hasNextLine()) {
+                String[] dados = scanner.nextLine().split(";");
+                String nome = dados[0];
+                int contribuinte = Integer.parseInt(dados[1]);
+                Cliente.Localizacao localizacao = switch (dados[2]) {
+                    case "Portugal Continental" -> Cliente.Localizacao.portugalContinental;
+                    case "Madeira" -> Cliente.Localizacao.madeira;
+                    case "Açores" -> Cliente.Localizacao.açores;
+                    default -> Cliente.Localizacao.portugalContinental;
+                };
+                int id = Integer.parseInt(dados[3]);
+                Cliente cliente = new Cliente(nome, contribuinte, localizacao, id);
+                clientes.add(cliente);
+            }
+            System.out.println("Dados carregados do Ficheiro Txt com sucesso!!");
         } catch (IOException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
@@ -293,13 +353,27 @@ class POOFS {
     public void exportBin() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
             out.writeInt(clientes.size());
-            for (Cliente cliente : clientes)
-                out.writeObject(cliente);   // TODO: Reescrever este método porque não está a escrever as siglas dos produtos
+            for (Cliente cliente : clientes) {
+                out.writeObject(cliente);
+                out.writeInt(cliente.getFaturas().size()); //faltava exportar a fatura e produtos de cada cliente
+                for (Fatura fatura : cliente.getFaturas()) {
+                    out.writeObject(fatura);
+                    out.writeInt(fatura.produtos.size());
+                    for (Produto produto : fatura.produtos) {
+                        out.writeUTF(produto.obterSigla());
+                        out.writeObject(produto);
+                    }
+                }
+            }
             System.out.println("Dados guardados!");
         } catch (IOException e) {
             System.err.println("Erro ao guardar dados: " + e.getMessage());
         }
-    }    
+    }
+      
+
+    // ------------------------------ Métodos Auxiliares da Aplicação POOFS ------------------------------
+
 
     // Função auxiliar para procurar um produto por código
     private Cliente searchClientePorId(int id) {

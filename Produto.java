@@ -17,6 +17,15 @@ abstract class Produto implements Serializable {
         return "Produto: " + nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
     }
 
+    public static void adicionarProdutoPorTipo(Produto produto, String tipo) { //sketch do novo metodo, still needs work
+        if(produto.tipo().equals(tipo)){
+            produtos.add(produto);
+            System.out.println("Produto " + produto.getNome() + " adicionado com sucesso!");
+        }else{
+            System.out.println("Tipo de produto inválido!");
+        }
+    }
+
     public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
 
     public double calcularSemIVA() {
