@@ -44,19 +44,20 @@ class Fatura implements Serializable {
         }
     }
 
-    public static void searchProdutoPorCodigo(String codigo) { //sketch do novo metodo, still needs work
-        for (Produto produto : produtos) {
-            if(produto.getCodigo().equals(codigo)){
-                System.out.println(produto.produtoToString());
+    public void removerProduto(int codigo) {
+        for(Produto produto : produtos)
+            if (produto.getCodigo().equals(codigo)) {
+                produtos.remove(produto);
                 return;
             }
-        }
-        System.out.println("Produto não encontrado!");
+        System.out.println("Produto não encontrado.");
     }
 
-    public void removerProduto(int index) {
-        if (index >= 0 && index < produtos.size())
-            produtos.remove(index);
+    public Produto getProduto(int codigo) {
+        for(Produto produto : produtos)
+            if (produto.getCodigo().equals(codigo))
+                return produto;
+        return null;
     }
 
     public double calcularTotalComIVA() {

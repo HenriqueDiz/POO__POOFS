@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 class POOFS {
-    private final List<Cliente> clientes;
+    private List<Cliente> clientes; // não pode ser final porque vai ser alterado
 
     public POOFS() {
         this.clientes = new ArrayList<>();
@@ -124,11 +124,11 @@ class POOFS {
         int ano = Integer.parseInt(scanner.nextLine());
 
         Data dataFatura = new Data(dia, mes, ano);
-        Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura); // criamos fatura aqui e depois basta usar o método da fatura - novaFatura.adicionarProduto(produto)
+        Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura);
         
         String adicionarProduto;
         do {
-            Produto produto = adicionarProdutoPorTipo(produto, tipo); // sketch metodo adicionarProdutoPorTipo que meti no Produto.java
+            Produto produto = null; // TODO - Implementar método abstrato para adicionar produto (ou implementamos na class Auxiliar ?  nao sei)
             if(produto != null) {
                 novaFatura.adicionarProduto(produto);
                 System.out.println("Produto adicionado com sucesso!");
@@ -171,65 +171,72 @@ class POOFS {
             return;
         }
 
-        //editar data da fatura
+        // Editar data da fatura
         System.out.println("Editar Data da Fatura:");
-        System.out.println("Novo Dia:");
+        System.out.print("Novo Dia: ");
         int dia = Integer.parseInt(scanner.nextLine());
-        System.out.println("Novo Mês:");
+        System.out.print("Novo Mês: ");
         int mes = Integer.parseInt(scanner.nextLine());
-        System.out.println("Novo Ano:");
+        System.out.print("Novo Ano: ");
         int ano = Integer.parseInt(scanner.nextLine());
         fatura.setData(new Data(dia, mes, ano));
 
-        //editar produtos da fatura (sketch still needs work)
+        // Editar produtos da fatura
         System.out.println("Editar Produtos da Fatura:");
         System.out.println("1. Adicionar Produto");
         System.out.println("2. Remover Produto");
         System.out.println("3. Editar Produto");
+        System.out.println("4. Sair");
+        System.out.print("Opção: ");
         int opcao = Integer.parseInt(scanner.nextLine());
-        switch (opcao) {
-            case 1 -> {
-                Produto produto = adicionarProdutoPorTipo(produto, tipo); // sketch metodo adicionarProdutoPorTipo que meti no Produto.java
-                if(produto != null) {
-                    fatura.adicionarProduto(produto);
-                    System.out.println("Produto adicionado com sucesso!");
+        do{
+            switch (opcao) {
+                case 1 -> {
+                    Produto produto = null; // TODO - chamar método abstrato para adicionar produto	
+                    if(produto != null) {
+                        fatura.adicionarProduto(produto);
+                        System.out.println("Produto adicionado com sucesso!");
+                    }
                 }
-            }
-            case 2 -> {
-                System.out.print("Código do Produto a remover: ");
-                String codigo = scanner.nextLine();
-                fatura.removerProduto(-indice do produto a remover-); //5AM coding be like...
-            }
-            case 3 -> {
-                System.out.print("Código do Produto a editar: ");
-                String codigo = scanner.nextLine();
-                Produto produto = fatura.searchProdutoPorCodigo(-codigo-); //mas o que é que eu estou a fazer aqui :(
-                if (produto == null) {
-                    System.out.println("Produto não encontrado!");
+                case 2 -> {
+                    System.out.print("Código do Produto a remover: ");
+                    int codigo = Integer.parseInt(scanner.nextLine());
+                    fatura.removerProduto(codigo);
+                }
+                case 3 -> {
+                    System.out.print("Código do Produto a editar: ");
+                    int codigo = Integer.parseInt(scanner.nextLine());
+                    Produto produto = fatura.getProduto(codigo);
+                    if (produto == null) {
+                        System.out.println("Produto não encontrado!");
+                        return;
+                    }
+                    System.out.print("Editar Nome (atual: " + produto.getNome() + "): ");
+                    String novoNome = scanner.nextLine();
+                    produto.setNome(novoNome.isEmpty() ? produto.getNome() : novoNome);
+
+                    System.out.print("Editar Descrição (atual: " + produto.getDescricao() + "): ");
+                    String novaDescricao = scanner.nextLine();
+                    produto.setDescricao(novaDescricao.isEmpty() ? produto.getDescricao() : novaDescricao);
+
+                    System.out.print("Editar Quantidade (atual: " + produto.getQuantidade() + "): ");
+                    String novaQuantidade = scanner.nextLine();
+                    if (!novaQuantidade.isEmpty()) {
+                        produto.setQuantidade(Integer.parseInt(novaQuantidade));
+                    }
+
+                    System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
+                    String novoValorUnitario = scanner.nextLine();
+                    if (!novoValorUnitario.isEmpty()) {
+                        produto.setValorUnitario(Double.parseDouble(novoValorUnitario));
+                    }
+                }
+                case 4 -> {
+                    System.out.println("A sair...");
                     return;
                 }
-                System.out.print("Editar Nome (atual: " + produto.getNome() + "): ");
-                String novoNome = scanner.nextLine();
-                produto.setNome(novoNome.isEmpty() ? produto.getNome() : novoNome);
-
-                System.out.print("Editar Descrição (atual: " + produto.getDescricao() + "): ");
-                String novaDescricao = scanner.nextLine();
-                produto.setDescricao(novaDescricao.isEmpty() ? produto.getDescricao() : novaDescricao);
-
-                System.out.print("Editar Quantidade (atual: " + produto.getQuantidade() + "): ");
-                String novaQuantidade = scanner.nextLine();
-                if (!novaQuantidade.isEmpty()) {
-                    produto.setQuantidade(Integer.parseInt(novaQuantidade));
-                }
-
-                System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
-                String novoValorUnitario = scanner.nextLine();
-                if (!novoValorUnitario.isEmpty()) {
-                    produto.setValorUnitario(Double.parseDouble(novoValorUnitario));
-                }
             }
-        }
-
+        } while (opcao != 4);
         System.out.println("Fatura editada com sucesso!");
         exportBin();
     }
@@ -309,7 +316,7 @@ class POOFS {
                 };
                 int id = Integer.parseInt(dados[3]);
                 Cliente cliente = new Cliente(nome, contribuinte, localizacao, id);
-                clientes.add(cliente);
+                clientes.add(cliente);                                   // TODO: FALTA ACABAR DE CARREGAR OS DADOS DOS CLIENTES
             }
             System.out.println("Dados carregados do Ficheiro Txt com sucesso!!");
         } catch (IOException e) {
@@ -317,12 +324,12 @@ class POOFS {
         }
     }   
 
-    // Método para carregar os dados de um ficheiro binário (2º Vez em diante que o programa é executado)
+    // Método para carregar os dados de um ficheiro binário (2º Vez e em diante que o programa é executado)
     public void loadBin(String filePath) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
             int tamanhoClientes = in.readInt();
             for (int i = 0; i < tamanhoClientes; i++) {
-                Cliente cliente = (Cliente) in.readObject();     // EU ACHO QUE ESTE MÉTODO FUNCIONA ("big acho lol" - caso contrário restaurar o commit anterior)
+                Cliente cliente = (Cliente) in.readObject();
                 int tamanhoFaturas = in.readInt();
                 for (int j = 0; j < tamanhoFaturas; j++) {
                     Fatura fatura = (Fatura) in.readObject();
@@ -349,13 +356,13 @@ class POOFS {
         }
     }   
 
-    // Função para guardar os dados em binário
+    // Método para guardar os dados em binário
     public void exportBin() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
             out.writeInt(clientes.size());
             for (Cliente cliente : clientes) {
                 out.writeObject(cliente);
-                out.writeInt(cliente.getFaturas().size()); //faltava exportar a fatura e produtos de cada cliente
+                out.writeInt(cliente.getFaturas().size());
                 for (Fatura fatura : cliente.getFaturas()) {
                     out.writeObject(fatura);
                     out.writeInt(fatura.produtos.size());

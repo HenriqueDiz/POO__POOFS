@@ -9,18 +9,9 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
 
     private final Set<Certificacao> certificacoes;
 
-    public ProdutoAlimentarTaxaReduzida(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico, int certificacaoBits) {
+    public ProdutoAlimentarTaxaReduzida(String codigo, String nome, String descricao, int quantidade, double valorUnitario, boolean biologico, Set<Certificacao> certificacoes) {
         super(codigo, nome, descricao, quantidade, valorUnitario, biologico);
-        this.certificacoes = decodeCertificacao(certificacaoBits);
-    }
-
-    private Set<Certificacao> decodeCertificacao(int certificacaoBits) {
-        Set<Certificacao> certifi = EnumSet.noneOf(Certificacao.class);
-        Certificacao[] values = Certificacao.values();
-        for (int i = 0; i < values.length; i++)
-            if ((certificacaoBits & (1 << i)) != 0) 
-                certifi.add(values[i]);
-        return certificacoes;
+        this.certificacoes = EnumSet.copyOf(certificacoes);
     }
 
     @Override
@@ -43,8 +34,4 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
 
     public Set<Certificacao> getCertificacoes() {return certificacoes;}
 
-    public void setCertificacoes(int certificacaoBits) {
-        this.certificacoes.clear();
-        this.certificacoes.addAll(decodeCertificacao(certificacaoBits));
-    }
 }
