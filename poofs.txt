@@ -1,0 +1,22 @@
+# Cliente
+Henrique daGoat Diz;123456789;Portugal Continental;1
+# Fatura
+1;15;3;2023
+PAI;1;Vinho Tinto;Vinho de qualidade;10;5.0;true;vinho
+PAN;2;Arroz Biológico;Arroz de alta qualidade;20;1.5;true
+# Fatura
+2;20;3;2023
+PFCP;3;Medicamento A;Para dor de cabeça;5;10.0;12345;Dr. Silva
+PFSP;4;Creme de Beleza;Para pele seca;3;15.0;beleza
+# Cliente
+Tommy Gizels;987654321;Madeira;2
+# Fatura
+3;25;3;2023
+PAR;5;Fruta Biológica;Fruta fresca;15;2.0;true;ISO22000,FSSC22000,HACCP,GMP
+PAI;6;Legumes;Legumes frescos;10;3.0;false;congelados
+# Cliente
+Carlos Costa;456789123;Açores;3
+# Fatura
+4;30;3;2023
+PFCP;7;Medicamento B;Para gripe;8;12.0;67890;Dr. Costa
+PFSP;8;Shampoo;Para cabelo;6;8.0;bebes

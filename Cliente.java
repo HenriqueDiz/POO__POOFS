@@ -21,7 +21,7 @@ class Cliente implements Serializable{
         this.faturas = new ArrayList<>();
     }
 
-    public String clienteToString() {
+    public String clienteToString() { 
         String localizacaoFormatada = getLocalizacaoFormatada();
         return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada + ", ID: " + id;
     }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -128,16 +129,15 @@ class POOFS {
         
         String adicionarProduto;
         do {
-            Produto produto = null; // TODO - Implementar método abstrato para adicionar produto (ou implementamos na class Auxiliar ?  nao sei)
-            if(produto != null) {
+            Produto produto = novaFatura.adicionarProduto(scanner);
+            if (produto != null) {
                 novaFatura.adicionarProduto(produto);
                 System.out.println("Produto adicionado com sucesso!");
             }
-
+    
             System.out.print("Adicionar outro produto (S/N) ? ");
             adicionarProduto = scanner.nextLine();
-        } while (adicionarProduto.equalsIgnoreCase("S"));
-
+        } while (adicionarProduto.equalsIgnoreCase("S"));    
 
         cliente.addFatura(novaFatura);
 
@@ -180,63 +180,49 @@ class POOFS {
         System.out.print("Novo Ano: ");
         int ano = Integer.parseInt(scanner.nextLine());
         fatura.setData(new Data(dia, mes, ano));
-
+        
         // Editar produtos da fatura
-        System.out.println("Editar Produtos da Fatura:");
-        System.out.println("1. Adicionar Produto");
-        System.out.println("2. Remover Produto");
-        System.out.println("3. Editar Produto");
-        System.out.println("4. Sair");
-        System.out.print("Opção: ");
-        int opcao = Integer.parseInt(scanner.nextLine());
-        do{
+        int opcao;
+        do {
+            System.out.println("Editar Produtos da Fatura:");
+            System.out.println("1. Adicionar Produto");
+            System.out.println("2. Remover Produto");
+            System.out.println("3. Editar Produto");
+            System.out.println("4. Sair");
+            System.out.print("Opção: ");
+            opcao = Integer.parseInt(scanner.nextLine());
+    
             switch (opcao) {
-                case 1 -> {
-                    Produto produto = null; // TODO - chamar método abstrato para adicionar produto	
-                    if(produto != null) {
-                        fatura.adicionarProduto(produto);
+                case 1:
+                    Produto novoProduto = fatura.adicionarProduto(scanner);
+                    if (novoProduto != null) {
+                        fatura.adicionarProduto(novoProduto);
                         System.out.println("Produto adicionado com sucesso!");
                     }
-                }
-                case 2 -> {
-                    System.out.print("Código do Produto a remover: ");
-                    int codigo = Integer.parseInt(scanner.nextLine());
-                    fatura.removerProduto(codigo);
-                }
-                case 3 -> {
-                    System.out.print("Código do Produto a editar: ");
-                    int codigo = Integer.parseInt(scanner.nextLine());
-                    Produto produto = fatura.getProduto(codigo);
-                    if (produto == null) {
-                        System.out.println("Produto não encontrado!");
-                        return;
+                    break;
+                case 2: // a verificar com a prof...
+                    //System.out.print("Código do Produto a remover: ");
+                    //int codigo = Integer.parseInt(scanner.nextLine());
+                    //fatura.removerProduto(codigo);
+                    //break;
+                case 3: 
+                    System.out.print("Código do produto a editar: ");
+                    String codigoEditar = scanner.nextLine();
+                    if (fatura.editarProduto(codigoEditar, scanner)) { //meti editarProduto como boolean aqui ajuda a ficar mais simples
+                        System.out.println("Produto editado com sucesso!");
+                    } else {
+                        System.out.println("Produto não encontrado.");
                     }
-                    System.out.print("Editar Nome (atual: " + produto.getNome() + "): ");
-                    String novoNome = scanner.nextLine();
-                    produto.setNome(novoNome.isEmpty() ? produto.getNome() : novoNome);
-
-                    System.out.print("Editar Descrição (atual: " + produto.getDescricao() + "): ");
-                    String novaDescricao = scanner.nextLine();
-                    produto.setDescricao(novaDescricao.isEmpty() ? produto.getDescricao() : novaDescricao);
-
-                    System.out.print("Editar Quantidade (atual: " + produto.getQuantidade() + "): ");
-                    String novaQuantidade = scanner.nextLine();
-                    if (!novaQuantidade.isEmpty()) {
-                        produto.setQuantidade(Integer.parseInt(novaQuantidade));
-                    }
-
-                    System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
-                    String novoValorUnitario = scanner.nextLine();
-                    if (!novoValorUnitario.isEmpty()) {
-                        produto.setValorUnitario(Double.parseDouble(novoValorUnitario));
-                    }
-                }
-                case 4 -> {
-                    System.out.println("A sair...");
-                    return;
-                }
+                    break;
+                case 4:
+                    System.out.println("A sair do menu de edição...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    break;
             }
         } while (opcao != 4);
+
         System.out.println("Fatura editada com sucesso!");
         exportBin();
     }
@@ -304,25 +290,71 @@ class POOFS {
     // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
     public void loadTxt(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
-            while(scanner.hasNextLine()) {
-                String[] dados = scanner.nextLine().split(";");
-                String nome = dados[0];
-                int contribuinte = Integer.parseInt(dados[1]);
-                Cliente.Localizacao localizacao = switch (dados[2]) {
-                    case "Portugal Continental" -> Cliente.Localizacao.portugalContinental;
-                    case "Madeira" -> Cliente.Localizacao.madeira;
-                    case "Açores" -> Cliente.Localizacao.açores;
-                    default -> Cliente.Localizacao.portugalContinental;
-                };
-                int id = Integer.parseInt(dados[3]);
-                Cliente cliente = new Cliente(nome, contribuinte, localizacao, id);
-                clientes.add(cliente);                                   // TODO: FALTA ACABAR DE CARREGAR OS DADOS DOS CLIENTES
+            Cliente cliente = null; //inicializar cliente e fatura a null
+            Fatura fatura = null;
+            while (scanner.hasNextLine()) { 
+                String line = scanner.nextLine();
+                if (line.startsWith("# Cliente")) { //meti # Cliente mas podemos meter outra cena
+                    if (cliente != null) {
+                        clientes.add(cliente);
+                    }
+                    String[] dadosCliente = scanner.nextLine().split(";");
+                    String nome = dadosCliente[0];
+                    int contribuinte = Integer.parseInt(dadosCliente[1]);
+                    Cliente.Localizacao localizacao = switch (dadosCliente[2]) {
+                        case "Portugal Continental" -> Cliente.Localizacao.portugalContinental;
+                        case "Madeira" -> Cliente.Localizacao.madeira;
+                        case "Açores" -> Cliente.Localizacao.açores;
+                        default -> Cliente.Localizacao.portugalContinental;
+                    };
+                    int id = Integer.parseInt(dadosCliente[3]);
+                    cliente = new Cliente(nome, contribuinte, localizacao, id);
+                } else if (line.startsWith("# Fatura")) { //mm cena para a fatura, podemos mudar
+                    if (fatura != null && cliente != null) {
+                        cliente.addFatura(fatura);
+                    }
+                    String[] dadosFatura = scanner.nextLine().split(";");
+                    int numero = Integer.parseInt(dadosFatura[0]);
+                    int dia = Integer.parseInt(dadosFatura[1]);
+                    int mes = Integer.parseInt(dadosFatura[2]);
+                    int ano = Integer.parseInt(dadosFatura[3]);
+                    Data data = new Data(dia, mes, ano);
+                    fatura = new Fatura(numero, cliente, data);
+                } else { //caso nao seja nem cliente nem fatura, é produto
+                    String[] dadosProduto = line.split(";");
+                    String sigla = dadosProduto[0];
+                    String codigo = dadosProduto[1];
+                    String nome = dadosProduto[2];
+                    String descricao = dadosProduto[3];
+                    int quantidade = Integer.parseInt(dadosProduto[4]);
+                    double valorUnitario = Double.parseDouble(dadosProduto[5]);
+                    Produto produto = switch (sigla) {
+                        case "PAI" -> new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
+                        case "PAN" -> new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]));
+                        case "PAR" -> {
+                            EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
+                            for (String cert : dadosProduto[7].split(",")) {
+                                certificacoes.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
+                            }
+                            yield new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), certificacoes);
+                        }
+                        case "PFCP" -> new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, dadosProduto[6], dadosProduto[7]);
+                        case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
+                        default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
+                    };
+                    if (fatura != null) {
+                        fatura.adicionarProduto(produto);
+                    }
+                }
+            }
+            if (cliente != null) {
+                clientes.add(cliente);
             }
             System.out.println("Dados carregados do Ficheiro Txt com sucesso!!");
         } catch (IOException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
-    }   
+    }
 
     // Método para carregar os dados de um ficheiro binário (2º Vez e em diante que o programa é executado)
     public void loadBin(String filePath) {
