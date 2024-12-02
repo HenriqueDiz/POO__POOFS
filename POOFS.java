@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 class POOFS {
-    private List<Cliente> clientes; // não pode ser final porque vai ser alterado
+    private List<Cliente> clientes;
 
     public POOFS() {
         this.clientes = new ArrayList<>();
@@ -290,11 +290,11 @@ class POOFS {
     // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
     public void loadTxt(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
-            Cliente cliente = null; //inicializar cliente e fatura a null
+            Cliente cliente = null;
             Fatura fatura = null;
             while (scanner.hasNextLine()) { 
                 String line = scanner.nextLine();
-                if (line.startsWith("# Cliente")) { //meti # Cliente mas podemos meter outra cena
+                if (line.startsWith("# Cliente")) {
                     if (cliente != null) {
                         clientes.add(cliente);
                     }
@@ -309,42 +309,42 @@ class POOFS {
                     };
                     int id = Integer.parseInt(dadosCliente[3]);
                     cliente = new Cliente(nome, contribuinte, localizacao, id);
-                } else if (line.startsWith("# Fatura")) { //mm cena para a fatura, podemos mudar
-                    if (fatura != null && cliente != null) {
-                        cliente.addFatura(fatura);
-                    }
+                } else if (line.startsWith("# Fatura")) { // TODO: Fazer um While !!!!!!!!
                     String[] dadosFatura = scanner.nextLine().split(";");
                     int numero = Integer.parseInt(dadosFatura[0]);
                     int dia = Integer.parseInt(dadosFatura[1]);
                     int mes = Integer.parseInt(dadosFatura[2]);
                     int ano = Integer.parseInt(dadosFatura[3]);
                     Data data = new Data(dia, mes, ano);
-                    fatura = new Fatura(numero, cliente, data);
+                    if (cliente != null) fatura = new Fatura(numero, cliente, data);
+                    else System.out.println("Erro: Cliente não encontrado.");
                 } else { //caso nao seja nem cliente nem fatura, é produto
-                    String[] dadosProduto = line.split(";");
-                    String sigla = dadosProduto[0];
-                    String codigo = dadosProduto[1];
-                    String nome = dadosProduto[2];
-                    String descricao = dadosProduto[3];
-                    int quantidade = Integer.parseInt(dadosProduto[4]);
-                    double valorUnitario = Double.parseDouble(dadosProduto[5]);
-                    Produto produto = switch (sigla) {
-                        case "PAI" -> new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
-                        case "PAN" -> new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]));
-                        case "PAR" -> {
-                            EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
-                            for (String cert : dadosProduto[7].split(",")) {
-                                certificacoes.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
+                    int size = Integer.parseInt(line);
+                    for (int i = 0; i < size; i++) {
+                        String[] dadosProduto = line.split(";");
+                        String sigla = dadosProduto[0];
+                        String codigo = dadosProduto[1];
+                        String nome = dadosProduto[2];
+                        String descricao = dadosProduto[3];
+                        int quantidade = Integer.parseInt(dadosProduto[4]);
+                        double valorUnitario = Double.parseDouble(dadosProduto[5]);
+                        Produto produto = switch (sigla) {
+                            case "PAI" -> new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
+                            case "PAN" -> new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]));
+                            case "PAR" -> {
+                                EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
+                                for (String cert : dadosProduto[7].split(",")) {
+                                    certificacoes.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
+                                }
+                                yield new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), certificacoes);
                             }
-                            yield new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), certificacoes);
-                        }
-                        case "PFCP" -> new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, dadosProduto[6], dadosProduto[7]);
-                        case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
-                        default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
-                    };
-                    if (fatura != null) {
-                        fatura.adicionarProduto(produto);
+                            case "PFCP" -> new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, dadosProduto[6], dadosProduto[7]);
+                            case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
+                            default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
+                        };
+                        if (fatura != null) fatura.adicionarProduto(produto);
                     }
+                    cliente.addFatura(fatura);
                 }
             }
             if (cliente != null) {

@@ -75,7 +75,7 @@ class Fatura implements Serializable {
 
     public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
         System.out.println("\nFatura nº: " + numero);
-        System.out.println("Cliente: " + cliente.toString() + "\n"); //cliente esta a sair mal formatado (override no cliente?)
+        System.out.println("Cliente: " + cliente.clienteToString() + "\n");
         if (detalhada){
             listarProdutos();
             System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
@@ -89,10 +89,7 @@ class Fatura implements Serializable {
         for (int i = 0; i < produtos.size(); i++) {
             Produto produto = produtos.get(i);
 
-            System.out.println("\nProduto " + (i + 1) + ":");
-            System.out.println(produto.produtoToString());
-            System.out.println("\nCódigo :");
-            System.out.println(produto.getCodigo());
+            System.out.println("\nProduto " + (i + 1) + ": " + produto.produtoToString());
             System.out.printf("Valor do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
             System.out.printf("Valor do Produto com IVA: %.2f\n", produto.calcularComIVA(cliente.getLocalizacao()));
             System.out.printf("Valor do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(cliente.getLocalizacao()));
@@ -136,7 +133,7 @@ class Fatura implements Serializable {
                 produto.setQuantidade(Integer.parseInt(novaQuantidade));
             }
 
-            System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
+            //System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
             String novoValorUnitario = scanner.nextLine();
             if (!novoValorUnitario.isEmpty()) {
                 produto.setValorUnitario(Double.parseDouble(novoValorUnitario));

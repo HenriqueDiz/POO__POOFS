@@ -14,10 +14,8 @@ abstract class Produto implements Serializable {
     }
 
     public String produtoToString(){
-        return "Produto: " + nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
+        return nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
     }
-
-    // TODO - Implementar método abstrato para input do produto (passar o scanner como argumento)
 
     public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
 

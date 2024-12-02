@@ -11,7 +11,7 @@ class Cliente implements Serializable{
     private Localizacao localizacao;
     private String nome;
     private int contribuinte, id;
-    private List<Fatura> faturas;
+    public  List<Fatura> faturas;
 
     public Cliente(String nome, int contribuinte, Localizacao localizacao, int id) {
         this.nome = nome;
