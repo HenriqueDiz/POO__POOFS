@@ -36,17 +36,19 @@ class Fatura implements Serializable {
         double valorUnitario = Double.parseDouble(scanner.nextLine());
 
         switch (tipo) {
-            case "PAI":
+            case "PAI" -> {
                 System.out.print("É biológico (true/false): ");
                 boolean biologico = Boolean.parseBoolean(scanner.nextLine());
                 System.out.print("Categoria alimentar: ");
                 ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoriaAlimentar = ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(scanner.nextLine());
                 return new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, biologico, categoriaAlimentar);
-            case "PAN":
+            }
+            case "PAN" -> {
                 System.out.print("É biológico (true/false): ");
                 boolean biologicoNormal = Boolean.parseBoolean(scanner.nextLine());
                 return new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, biologicoNormal);
-            case "PAR":
+            }
+            case "PAR" -> {
                 System.out.print("É biológico (true/false): ");
                 boolean biologicoReduzida = Boolean.parseBoolean(scanner.nextLine());
                 System.out.print("Certificações (separadas por vírgula): ");
@@ -56,19 +58,23 @@ class Fatura implements Serializable {
                     certificacoesSet.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
                 }
                 return new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, biologicoReduzida, certificacoesSet);
-            case "PFCP":
+            }
+            case "PFCP" -> {
                 System.out.print("Código de prescrição: ");
                 String codigoPrescricao = scanner.nextLine();
                 System.out.print("Médico: ");
                 String medico = scanner.nextLine();
                 return new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, codigoPrescricao, medico);
-            case "PFSP":
+            }
+            case "PFSP" -> {
                 System.out.print("Categoria de farmácia: ");
                 ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoriaFarmacia = ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(scanner.nextLine());
                 return new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, categoriaFarmacia);
-            default:
+            }
+            default -> {
                 System.out.println("Tipo de produto desconhecido.");
                 return null;
+            }
         }
     }
 
