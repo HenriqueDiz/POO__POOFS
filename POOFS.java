@@ -291,7 +291,9 @@ class POOFS {
             Fatura fatura = null;
             Produto produto = null;
             while (scanner.hasNextLine()) { 
-                int id = Integer.parseInt(scanner.nextLine());
+                String line = scanner.nextLine();
+                if (line.isEmpty()) continue;
+                int id = Integer.parseInt(line);
                 String[] dadosCliente = scanner.nextLine().split(";");
                 String nomeCliente = dadosCliente[0];
                 int contribuinte = Integer.parseInt(dadosCliente[1]);
@@ -302,13 +304,16 @@ class POOFS {
                     default -> Cliente.Localizacao.portugalContinental;
                 };
                 cliente = new Cliente(nomeCliente, contribuinte, localizacao, id);
-                while (scanner.nextLine().startsWith("# Fatura")) { 
+                System.out.println("Cliente: " + cliente.clienteToString());    // Debug
+                while (scanner.hasNextLine() && scanner.nextLine().startsWith("# Fatura")) { 
                     String[] dadosFatura = scanner.nextLine().split(";");
                     int numero = Integer.parseInt(dadosFatura[0]);
                     Data data = new Data(Integer.parseInt(dadosFatura[1]), Integer.parseInt(dadosFatura[2]), Integer.parseInt(dadosFatura[3]));   
                     fatura = new Fatura(numero, cliente, data);
-                    String buffer = scanner.nextLine();
-                    while(!buffer.isEmpty()) { 
+                    System.out.println("Fatura Nº: " + fatura.getNumero());    // Debug
+                    while (scanner.hasNextLine()) {
+                        String buffer = scanner.nextLine();
+                        if (buffer.isEmpty()) break;
                         String[] dadosProduto = buffer.split(";");
                         String sigla = dadosProduto[0];
                         String codigo = dadosProduto[1];
@@ -329,6 +334,7 @@ class POOFS {
                             case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nomeProduto, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
                             default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
                         };
+                        System.out.println("Produto: " + produto.nome);    // Debug
                         fatura.adicionarProduto(produto);
                     }
                     cliente.addFatura(fatura);
