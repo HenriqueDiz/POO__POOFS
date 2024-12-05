@@ -293,19 +293,8 @@ class POOFS {
             while (scanner.hasNextLine()) { 
                 String line = scanner.nextLine();
                 if (line.isEmpty()) continue;
-                int id = Integer.parseInt(line);
-                String[] dadosCliente = scanner.nextLine().split(";");
-                String nomeCliente = dadosCliente[0];
-                int contribuinte = Integer.parseInt(dadosCliente[1]);
-                Cliente.Localizacao localizacao = switch (dadosCliente[2]) {
-                    case "Portugal Continental" -> Cliente.Localizacao.portugalContinental;
-                    case "Madeira" -> Cliente.Localizacao.madeira;
-                    case "Açores" -> Cliente.Localizacao.açores;
-                    default -> Cliente.Localizacao.portugalContinental;
-                };
-                cliente = new Cliente(nomeCliente, contribuinte, localizacao, id);
-                System.out.println("Cliente: " + cliente.clienteToString());    // Debug
-                while (scanner.hasNextLine() && scanner.nextLine().startsWith("# Fatura")) { 
+                if (line.startsWith("# Fatura")) { //ia tentar ler o id mm quando tinha la #fatura, dava erro
+                    //fatura
                     String[] dadosFatura = scanner.nextLine().split(";");
                     int numero = Integer.parseInt(dadosFatura[0]);
                     Data data = new Data(Integer.parseInt(dadosFatura[1]), Integer.parseInt(dadosFatura[2]), Integer.parseInt(dadosFatura[3]));   
@@ -338,8 +327,22 @@ class POOFS {
                         fatura.adicionarProduto(produto);
                     }
                     cliente.addFatura(fatura);
-                }   
-                clientes.add(cliente);
+                } else {
+                    //cliente
+                    int id = Integer.parseInt(line);
+                    String[] dadosCliente = scanner.nextLine().split(";");
+                    String nomeCliente = dadosCliente[0];
+                    int contribuinte = Integer.parseInt(dadosCliente[1]);
+                    Cliente.Localizacao localizacao = switch (dadosCliente[2]) {
+                        case "Portugal Continental" -> Cliente.Localizacao.portugalContinental;
+                        case "Madeira" -> Cliente.Localizacao.madeira;
+                        case "Açores" -> Cliente.Localizacao.açores;
+                        default -> Cliente.Localizacao.portugalContinental;
+                    };
+                    cliente = new Cliente(nomeCliente, contribuinte, localizacao, id);
+                    System.out.println("Cliente: " + cliente.clienteToString());    // Debug
+                    clientes.add(cliente);
+                }
             }
         } catch (IOException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
