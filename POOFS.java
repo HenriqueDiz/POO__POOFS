@@ -347,6 +347,8 @@ class POOFS {
         } catch (IOException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
+        System.out.println("Dados carregados do Ficheiro de Texto com sucesso!");
+        exportBin();
     }
             
 
@@ -398,7 +400,7 @@ class POOFS {
                     }
                 }
             }
-            System.out.println("Dados guardados!");
+            System.out.println("Dados guardados em Ficheiro Binário com sucesso!");
         } catch (IOException e) {
             System.err.println("Erro ao guardar dados: " + e.getMessage());
         }
