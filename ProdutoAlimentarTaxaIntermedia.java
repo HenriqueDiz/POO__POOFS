@@ -28,7 +28,7 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
     }
 
     @Override
-    public String obterSigla() {
-        return "PAI"; 
+    public String toString() {
+        return super.toString() + ", Categoria: " + categoria + ", Taxa: Intermédia";
     }
 }

@@ -23,7 +23,7 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
     }
 
     @Override
-    public String obterSigla() {
-        return "PFSP"; 
+    public String toString() {
+        return super.toString() + ", Categoria: " + categoriaFarmacia;
     }
 }

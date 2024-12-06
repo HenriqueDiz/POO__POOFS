@@ -21,7 +21,7 @@ class Data implements Serializable {
     
     public void setAno(int ano) { this.ano = ano; }
 
-    public String dataToString() {
+    public String toString() {
         return dia + "/" + mes + "/" + ano;
     }
 }

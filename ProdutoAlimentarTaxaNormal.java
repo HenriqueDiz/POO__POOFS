@@ -16,7 +16,7 @@ class ProdutoAlimentarTaxaNormal extends ProdutoAlimentar {
     }
 
     @Override
-    public String obterSigla() {
-        return "PAN"; 
+    public String toString() {
+        return super.toString() + ", Taxa: Normal";
     }
 }

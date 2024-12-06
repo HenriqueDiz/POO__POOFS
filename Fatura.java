@@ -21,7 +21,7 @@ class Fatura implements Serializable {
         produtos.add(produto);
     }
     
-    public Produto adicionarProduto(Scanner scanner) { //adiciona produto 
+    public Produto adicionarProduto(Scanner scanner) { // TODO: Adicionar métodos de INPUT E MODIFICAR ISTO
         System.out.print("Tipo de produto (PAI, PAN, PAR, PFCP, PFSP): ");
         String tipo = scanner.nextLine();
         System.out.print("Código do produto: ");
@@ -78,51 +78,7 @@ class Fatura implements Serializable {
         }
     }
 
-
-    public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
-        System.out.println("\nFatura nº: " + numero);
-        System.out.println("Cliente: " + cliente.clienteToString() + "\n");
-        if (detalhada){
-            listarProdutos();
-            System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
-        }
-        else System.out.println("Número de Produtos: " + getNumeroProdutos());
-        System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
-        System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
-    }
-
-    public void listarProdutos() {
-        for (int i = 0; i < produtos.size(); i++) {
-            Produto produto = produtos.get(i);
-
-            System.out.println("\nProduto " + (i + 1) + ": " + produto.produtoToString());
-            System.out.printf("Valor do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
-            System.out.printf("Valor do Produto com IVA: %.2f\n", produto.calcularComIVA(cliente.getLocalizacao()));
-            System.out.printf("Valor do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(cliente.getLocalizacao()));
-            System.out.printf("Taxa do IVA do Produto: %.0f %%\n", produto.calcularTaxaIVA(cliente.getLocalizacao()) * 100);
-        }
-    }
-
-    // remover produto a rever com a prof
-    //public void removerProduto(int codigo) {
-    //    for(Produto produto : produtos)
-    //        if (produto.getCodigo().equals(codigo)) {
-    //            produtos.remove(produto);
-    //            return;
-    //}
-    //    System.out.println("Produto não encontrado.");
-    //}
-
-    public Produto getProduto(String codigo) {
-        for (Produto produto : produtos) {
-            if (produto.getCodigo().equals(codigo)) {
-                return produto;
-            }
-        }
-        return null;
-    }
-
-    public boolean editarProduto(String codigo, Scanner scanner) { //retorna true se produto foi editado
+    public boolean editarProduto(String codigo, Scanner scanner) { // TODO: Adicionar métodos de INPUT E MODIFICAR ISTO
         Produto produto = getProduto(codigo);
         if (produto != null) {
             System.out.print("Editar Nome (atual: " + produto.getNome() + "): ");
@@ -138,16 +94,53 @@ class Fatura implements Serializable {
             if (!novaQuantidade.isEmpty()) {
                 produto.setQuantidade(Integer.parseInt(novaQuantidade));
             }
-
-            //System.out.print("Editar Valor Unitário (atual: " + produto.getValorUnitario() + "): ");
-            String novoValorUnitario = scanner.nextLine();
-            if (!novoValorUnitario.isEmpty()) {
-                produto.setValorUnitario(Double.parseDouble(novoValorUnitario));
-            }
             return true;
         }
         return false;
-    }    
+    }  
+
+    public void removerProduto(int codigo) {
+        for(Produto produto : produtos)
+            if (produto.getCodigo().equals(codigo)) {
+                produtos.remove(produto);
+                return;
+            }
+        System.out.println("Produto não encontrado.");
+    }
+
+    public Produto getProduto(String codigo) {
+        for (Produto produto : produtos) {
+            if (produto.getCodigo().equals(codigo)) {
+                return produto;
+            }
+        }
+        return null;
+    }      
+
+    public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
+        System.out.println("\nFatura nº: " + numero);
+        System.out.println("Data: " + data.toString());
+        System.out.println("Cliente: " + cliente.toString() + "\n");
+        if (detalhada){
+            listarProdutos();
+            System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());
+        }
+        else System.out.println("Número de Produtos: " + getNumeroProdutos());
+        System.out.printf("Valor Total da Fatura sem IVA: %.2f\n", calcularTotalSemIVA());
+        System.out.printf("Valor Total da Fatura com IVA: %.2f\n\n", calcularTotalComIVA());
+    }
+
+    public void listarProdutos() {
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto produto = produtos.get(i);
+
+            System.out.println("\nProduto " + (i + 1) + " - " + produto.toString());
+            System.out.printf("Valor do Produto sem IVA: %.2f\n", produto.calcularSemIVA());
+            System.out.printf("Valor do Produto com IVA: %.2f\n", produto.calcularComIVA(cliente.getLocalizacao()));
+            System.out.printf("Valor do IVA do Produto: %.2f\n", produto.calcularTotalDoIVA(cliente.getLocalizacao()));
+            System.out.printf("Taxa do IVA do Produto: %.0f %%\n", produto.calcularTaxaIVA(cliente.getLocalizacao()) * 100);
+        }
+    }
 
     public double calcularTotalComIVA() {
         double total = 0.0;
@@ -180,4 +173,8 @@ class Fatura implements Serializable {
     public Data getData() {return data;}
 
     public void setData(Data data) {this.data = data;}
+
+    public List<Produto> getProdutos() {return produtos;}
+
+    public void setProdutos(List<Produto> produtos) {this.produtos = produtos;}
 }

@@ -13,8 +13,13 @@ abstract class Produto implements Serializable {
         this.valorUnitario = valorUnitario;
     }
 
-    public String produtoToString(){
-        return nome + ", Código: " + codigo + ", Descrição: " + descricao + ", Quantidade: " + quantidade + ", Valor Unitário: " + valorUnitario;
+    @Override
+    public String toString(){
+        return  "Nome: " + nome + 
+                ", Descrição: " + descricao + 
+                ", Código: " + codigo +
+                ", Quantidade: " + quantidade + 
+                ", Valor Unitário: " + valorUnitario;
     }
 
     public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
@@ -30,9 +35,6 @@ abstract class Produto implements Serializable {
     public double calcularTotalDoIVA(Cliente.Localizacao localizacao) {
         return calcularComIVA(localizacao) - calcularSemIVA();
     }
-
-
-    public abstract String obterSigla();
 
     public String getNome() {return nome;} 
 

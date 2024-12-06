@@ -27,7 +27,7 @@ class ProdutoFarmaciaComPrescricao extends Produto{
     }
 
     @Override
-    public String obterSigla() {
-        return "PFCP"; 
+    public String toString() {
+        return super.toString() + ", Prescrição: " + prescricao + ", Médico: " + medico;
     }
 }

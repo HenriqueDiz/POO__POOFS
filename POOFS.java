@@ -20,69 +20,40 @@ class POOFS {
 
     // Opção 1 - Criar cliente
     public void criarCliente(Scanner scanner) {
-        System.out.print("Nome do novo cliente: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Nº de contribuinte: ");
-        int contribuinte = Integer.parseInt(scanner.nextLine());
-
-        System.out.println("1. Portugal Continental");
-        System.out.println("2. Madeira");
-        System.out.println("3. Açores");
-        System.out.print("Localização do novo cliente: ");
-        int opcao = Integer.parseInt(scanner.nextLine());
-
-        Cliente.Localizacao localizacao = switch (opcao) {
-            case 1 -> Cliente.Localizacao.portugalContinental;
-            case 2 -> Cliente.Localizacao.madeira;
-            case 3 -> Cliente.Localizacao.açores;
-            default -> Cliente.Localizacao.portugalContinental;
-        };
-
+        String nome = Auxiliar.lerString("Nome do novo cliente: ", scanner);
+        int contribuinte = Auxiliar.lerInteiro("Nº de Contribuinte do novo cliente: ", scanner);
+        Cliente.Localizacao localizacao = Auxiliar.lerLocalizacao("Localização do novo cliente: ", false, scanner);
         int id = clientes.size() + 1;
 
         Cliente novoCliente = new Cliente(nome, contribuinte, localizacao, id);
         clientes.add(novoCliente);
-
-        System.out.println("Cliente adicionado com Sucesso!");
+        
+        System.out.println("Cliente adicionado com sucesso!");
         exportBin();
     }
 
 
     // Opção 2 - Editar cliente
     public void editarCliente(Scanner scanner) {
-        System.out.print("ID do cliente para Editar: ");
-        int clienteId = Integer.parseInt(scanner.nextLine());
+        if (clientes.isEmpty()) {
+            System.out.println("\nNão há clientes registados na aplicação!");
+            return;
+        }
 
-        Cliente cliente = searchClientePorId(clienteId);
+        int id = Auxiliar.lerInteiro("ID do cliente para Editar: ", scanner);
+        Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        System.out.print("Editar Nome (atual: " + cliente.getNome() + "): ");
-        String novoNome = scanner.nextLine();
+        String novoNome = Auxiliar.lerString("Editar Nome (atual: " + cliente.getNome() + " - deixe em branco para manter o atual): ", scanner);
         cliente.setNome(novoNome.isEmpty() ? cliente.getNome() : novoNome);
 
-        System.out.print("Editar Nº de Contribuinte (atual: " + cliente.getContribuinte() + "): ");
-        String novoContribuinte = scanner.nextLine();
-        if (!novoContribuinte.isEmpty()) {
-            cliente.setContribuinte(Integer.parseInt(novoContribuinte));
-        }
+        Cliente.Localizacao novaLocalizacao = Auxiliar.lerLocalizacao("Editar Localização do cliente - deixe em branco para manter a atual): ", true, scanner);
+        cliente.setLocalizacao(novaLocalizacao == null ? cliente.getLocalizacao() : novaLocalizacao);
 
-        System.out.print("Editar Localização (1. Portugal Continental, 2. Madeira, 3. Açores): ");
-        String novaLocalizacao = scanner.nextLine();
-        if (!novaLocalizacao.isEmpty()) {
-            Cliente.Localizacao localizacao = switch (Integer.parseInt(novaLocalizacao)) {
-                case 1 -> Cliente.Localizacao.portugalContinental;
-                case 2 -> Cliente.Localizacao.madeira;
-                case 3 -> Cliente.Localizacao.açores;
-                default -> cliente.getLocalizacao();
-            };
-            cliente.setLocalizacao(localizacao);
-        }
-
-        System.out.println("Cliente atualizado com sucesso!");
+        System.out.println("Cliente editado com sucesso!");
         exportBin();
     }
 
@@ -94,54 +65,48 @@ class POOFS {
             return;
         }
         for (Cliente cliente : clientes)
-            System.out.println("\n" + cliente.clienteToString());
+            System.out.println("\n" + cliente.toString());
     }
 
 
     // Opção 4 - Criar fatura
     public void criarFatura(Scanner scanner) {
-        System.out.print("ID do cliente para criar a fatura: ");
-        int clienteId = Integer.parseInt(scanner.nextLine());
+        if (clientes.isEmpty()) {
+            System.out.println("\nNão há clientes registados na aplicação!");
+            return;
+        }
 
-        Cliente cliente = searchClientePorId(clienteId);
+        int id = Auxiliar.lerInteiro("ID do cliente para criar fatura: ", scanner);
+
+        Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        System.out.print("Nº da fatura: ");
-        int numeroFatura = Integer.parseInt(scanner.nextLine());
+        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura: ", scanner);
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura != null) {
             System.out.println("Fatura já existe!");
             return;
         }
 
-        System.out.print("Dia da fatura: ");
-        int dia = Integer.parseInt(scanner.nextLine());
-        System.out.print("Mês da fatura: ");
-        int mes = Integer.parseInt(scanner.nextLine());
-        System.out.print("Ano da fatura: ");
-        int ano = Integer.parseInt(scanner.nextLine());
+        Data dataFatura = Auxiliar.lerData("Data da fatura [dd/mm/yy]: ", false, scanner);
 
-        Data dataFatura = new Data(dia, mes, ano);
         Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura);
-        
-        String adicionarProduto;
+        String input;
         do {
             Produto produto = novaFatura.adicionarProduto(scanner);
             if (produto != null) {
                 novaFatura.adicionarProduto(produto);
                 System.out.println("Produto adicionado com sucesso!");
             }
-    
             System.out.print("Adicionar outro produto (S/N) ? ");
-            adicionarProduto = scanner.nextLine();
-        } while (adicionarProduto.equalsIgnoreCase("S"));    
+            input = scanner.nextLine();
+        } while (input.equalsIgnoreCase("S"));    
 
-        cliente.addFatura(novaFatura);
-
-        System.out.println("Fatura criada com sucesso para " + cliente.getNome());
+        cliente.adicionarFatura(novaFatura);
+        System.out.println("Fatura criada com sucesso!");
         exportBin();
     }
 
@@ -153,44 +118,32 @@ class POOFS {
             return;
         }
         
-        System.out.print("ID do cliente associado à fatura: ");
-        int clienteID = Integer.parseInt(scanner.nextLine());
+        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner);
         
-        Cliente cliente = searchClientePorId(clienteID);
+        Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        System.out.print("Nº da fatura que deseja editar: ");
-        int numeroFatura = Integer.parseInt(scanner.nextLine());
-
+        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura a editar: ", scanner);
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura == null) {
             System.out.println("Fatura não encontrada!");
             return;
         }
 
-        // Editar data da fatura
-        System.out.println("Editar Data da Fatura:");
-        System.out.print("Novo Dia: ");
-        int dia = Integer.parseInt(scanner.nextLine());
-        System.out.print("Novo Mês: ");
-        int mes = Integer.parseInt(scanner.nextLine());
-        System.out.print("Novo Ano: ");
-        int ano = Integer.parseInt(scanner.nextLine());
-        fatura.setData(new Data(dia, mes, ano));
+        Data data = Auxiliar.lerData("Editar Data da Fatura (atual: " + fatura.data.toString() + " - deixe em branco para manter o atual - [dd/mm/yy]): ", true, scanner);
+        fatura.setData(data == null ? fatura.getData() : data);
         
-        // Editar produtos da fatura
         int opcao;
         do {
-            System.out.println("Editar Produtos da Fatura:");
+            System.out.println("\n----- Editar Produtos da Fatura ------");
             System.out.println("1. Adicionar Produto");
             System.out.println("2. Remover Produto");
             System.out.println("3. Editar Produto");
             System.out.println("4. Sair");
-            System.out.print("Opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = Auxiliar.lerInteiro("Opção: ", scanner);
     
             switch (opcao) {
                 case 1 -> {
@@ -200,26 +153,21 @@ class POOFS {
                         System.out.println("Produto adicionado com sucesso!");
                     }
                 }
-                case 2, 3 -> // a verificar com a prof...
-                { 
+                case 2 ->{ 
                     System.out.print("Código do produto a editar: ");
                     String codigoEditar = scanner.nextLine();
-                    if (fatura.editarProduto(codigoEditar, scanner)) { //meti editarProduto como boolean aqui ajuda a ficar mais simples
-                        System.out.println("Produto editado com sucesso!");
-                    } else {
-                        System.out.println("Produto não encontrado.");
-                    }
+                    if (fatura.editarProduto(codigoEditar, scanner)) System.out.println("Produto editado com sucesso!");
+                    else System.out.println("Produto não encontrado.");
                 }
-                case 4 -> System.out.println("A sair do menu de edição...");
+                case 3-> {
+                    System.out.print("Código do produto a remover: ");
+                    int codigoRemover = Auxiliar.lerInteiro("Código do produto a remover: ", scanner);
+                    fatura.removerProduto(codigoRemover);
+                }
+                case 4 -> System.out.println("A sair do menu de edição de fatura...");
                 default -> System.out.println("Opção inválida.");
             }
-                // a verificar com a prof...
-                //System.out.print("Código do Produto a remover: ");
-                //int codigo = Integer.parseInt(scanner.nextLine());
-                //fatura.removerProduto(codigo);
-                //break;
-                    } while (opcao != 4);
-
+        } while (opcao != 4);
         System.out.println("Fatura editada com sucesso!");
         exportBin();
     }
@@ -242,24 +190,20 @@ class POOFS {
             return;
         }
 
-        System.out.print("ID do cliente associado à fatura: ");
-        int clienteID = Integer.parseInt(scanner.nextLine());
-
-        Cliente cliente = searchClientePorId(clienteID);
+        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner);
+        Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("\nCliente não encontrado!");
             return;
         }
 
-        System.out.print("Nº da fatura que deseja visualizar: ");
-        int numeroFatura = Integer.parseInt(scanner.nextLine());
-    
-        Fatura faturaEncontrada = cliente.searchFaturaNumero(numeroFatura);
-        if (faturaEncontrada == null) {
+        int numero = Auxiliar.lerInteiro("Nº da fatura que deseja visualizar: ", scanner);
+        Fatura fatura = cliente.searchFaturaNumero(numero);
+        if (fatura == null) {
             System.out.println("\nFatura não encontrada!");
             return;
         }
-        faturaEncontrada.imprimirFatura(true);
+        fatura.imprimirFatura(true);
     }
 
     // Opção 8 - Apresentar estatísticas
@@ -288,19 +232,15 @@ class POOFS {
     public void loadTxt(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
             Cliente cliente = null;
-            Fatura fatura = null;
-            Produto produto = null;
             while (scanner.hasNextLine()) { 
                 String line = scanner.nextLine();
                 if (line.isEmpty()) continue;
-                if (line.startsWith("# Fatura")) { //ia tentar ler o id mm quando tinha la #fatura, dava erro
-                    //fatura
+                if (line.startsWith("# Fatura")) {     // Fatura
                     String[] dadosFatura = scanner.nextLine().split(";");
                     int numero = Integer.parseInt(dadosFatura[0]);
                     Data data = new Data(Integer.parseInt(dadosFatura[1]), Integer.parseInt(dadosFatura[2]), Integer.parseInt(dadosFatura[3]));   
-                    fatura = new Fatura(numero, cliente, data);
-                    System.out.println("Fatura Nº: " + fatura.getNumero());    // Debug
-                    while (scanner.hasNextLine()) {
+                    Fatura fatura = new Fatura(numero, cliente, data);
+                    while (scanner.hasNextLine()) {    // Produtos   
                         String buffer = scanner.nextLine();
                         if (buffer.isEmpty()) break;
                         String[] dadosProduto = buffer.split(";");
@@ -310,7 +250,7 @@ class POOFS {
                         String descricao = dadosProduto[3];
                         int quantidade = Integer.parseInt(dadosProduto[4]);
                         double valorUnitario = Double.parseDouble(dadosProduto[5]);
-                        produto = switch (sigla) {
+                        Produto produto = switch (sigla) {
                             case "PAI" -> new ProdutoAlimentarTaxaIntermedia(codigo, nomeProduto, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
                             case "PAN" -> new ProdutoAlimentarTaxaNormal(codigo, nomeProduto, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]));
                             case "PAR" -> {
@@ -323,12 +263,10 @@ class POOFS {
                             case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nomeProduto, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
                             default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
                         };
-                        System.out.println("Produto: " + produto.nome);    // Debug
                         fatura.adicionarProduto(produto);
                     }
-                    cliente.addFatura(fatura);
-                } else {
-                    //cliente
+                    if (cliente != null) cliente.adicionarFatura(fatura);
+                } else {    // Cliente
                     int id = Integer.parseInt(line);
                     String[] dadosCliente = scanner.nextLine().split(";");
                     String nomeCliente = dadosCliente[0];
@@ -340,7 +278,6 @@ class POOFS {
                         default -> Cliente.Localizacao.portugalContinental;
                     };
                     cliente = new Cliente(nomeCliente, contribuinte, localizacao, id);
-                    System.out.println("Cliente: " + cliente.clienteToString());    // Debug
                     clientes.add(cliente);
                 }
             }
@@ -358,48 +295,20 @@ class POOFS {
             int tamanhoClientes = in.readInt();
             for (int i = 0; i < tamanhoClientes; i++) {
                 Cliente cliente = (Cliente) in.readObject();
-                int tamanhoFaturas = in.readInt();
-                for (int j = 0; j < tamanhoFaturas; j++) {
-                    Fatura fatura = (Fatura) in.readObject();
-                    int tamanhoProdutos = in.readInt();
-                    for (int k = 0; k < tamanhoProdutos; k++) {
-                        String sigla = in.readUTF();
-                        Produto produto = null;
-                        switch (sigla) {
-                            case "PAI" -> {produto = (ProdutoAlimentarTaxaIntermedia) in.readObject();}
-                            case "PAN" -> {produto = (ProdutoAlimentarTaxaNormal) in.readObject();}
-                            case "PAR" -> {produto = (ProdutoAlimentarTaxaReduzida) in.readObject();}
-                            case "PFCP" -> {produto = (ProdutoFarmaciaComPrescricao) in.readObject();}
-                            case "PFSP" -> {produto = (ProdutoFarmaciaSemPrescricao) in.readObject();}
-                        }
-                        fatura.adicionarProduto(produto);
-                    }
-                    cliente.addFatura(fatura);
-                }
                 clientes.add(cliente);
             }
             System.out.println("Dados carregados do Ficheiro Bin com sucesso!!");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
-    }   
+    }
 
     // Método para guardar os dados em binário
     public void exportBin() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("docs/dados.bin"))) {
             out.writeInt(clientes.size());
-            for (Cliente cliente : clientes) {
+            for (Cliente cliente : clientes)
                 out.writeObject(cliente);
-                out.writeInt(cliente.getFaturas().size());
-                for (Fatura fatura : cliente.getFaturas()) {
-                    out.writeObject(fatura);
-                    out.writeInt(fatura.produtos.size());
-                    for (Produto produto : fatura.produtos) {
-                        out.writeUTF(produto.obterSigla());
-                        out.writeObject(produto);
-                    }
-                }
-            }
             System.out.println("Dados guardados em Ficheiro Binário com sucesso!");
         } catch (IOException e) {
             System.err.println("Erro ao guardar dados: " + e.getMessage());

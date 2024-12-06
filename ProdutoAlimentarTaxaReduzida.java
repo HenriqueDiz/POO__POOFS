@@ -28,8 +28,8 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
     }
 
     @Override
-    public String obterSigla() {
-        return "PAR"; 
+    public String toString() {
+        return super.toString() + certificacoes + ", Taxa: Reduzida";
     }
 
     public Set<Certificacao> getCertificacoes() {return certificacoes;}

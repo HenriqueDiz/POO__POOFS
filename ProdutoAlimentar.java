@@ -6,6 +6,11 @@ abstract class ProdutoAlimentar extends Produto{
         this.biologico = biologico;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + ", Biológico: " + biologico;
+    }
+
     public boolean getBiologico() {return biologico;}
 
     public void setBiologico(boolean biologico) {this.biologico = biologico;}	

@@ -1,21 +1,15 @@
 import java.util.Scanner;
 
 public class Main {
-    
-    public static boolean binFileExists(String fileName) {
-        java.io.File file = new java.io.File(fileName);
-        return file.exists();
-    }
-
     public static void main(String[] args) {
         POOFS app = new POOFS();
         Scanner scanner = new Scanner(System.in);
         
-        // Ciclo geral de loading no Projeto
-        if (binFileExists("dados.bin")) app.loadBin("dados.bin");  // Load bin se existir
-        else app.loadTxt("poofs.txt");                             // Se não existir ainda, então é a primeira vez, logo load txt
+        if (Auxiliar.binFileExists("docs/dados.bin")) app.loadBin("docs/dados.bin"); 
+        else app.loadTxt("docs/poofs.txt");                                          
 
         while (true) {
+            System.out.println("\n---------- POOFS ----------");
             System.out.println("\n1. Criar cliente");
             System.out.println("2. Editar cliente");
             System.out.println("3. Listar todos os clientes");
@@ -25,6 +19,7 @@ public class Main {
             System.out.println("7. Visualizar fatura");
             System.out.println("8. Estatísticas");
             System.out.println("9. Sair");
+            System.out.println("\n---------- POOFS ----------\n");
             System.out.println("Escolha uma opção: ");
             int opcao = Integer.parseInt(scanner.nextLine());
 

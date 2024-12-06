@@ -21,7 +21,8 @@ class Cliente implements Serializable{
         this.faturas = new ArrayList<>();
     }
 
-    public String clienteToString() { 
+    @Override
+    public String toString() { 
         String localizacaoFormatada = getLocalizacaoFormatada();
         return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada + ", ID: " + id;
     }
@@ -34,7 +35,7 @@ class Cliente implements Serializable{
         };
     }
 
-    public void addFatura(Fatura fatura) {
+    public void adicionarFatura(Fatura fatura) {
         faturas.add(fatura);
     }
 
