@@ -34,4 +34,8 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
 
     public Set<Certificacao> getCertificacoes() {return certificacoes;}
 
+    public void setCertificacoes(Set<Certificacao> certificacoes) {
+        this.certificacoes.clear();
+        this.certificacoes.addAll(certificacoes);
+    }
 }

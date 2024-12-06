@@ -13,6 +13,8 @@ abstract class Produto implements Serializable {
         this.valorUnitario = valorUnitario;
     }
 
+    public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
+
     @Override
     public String toString(){
         return  "Nome: " + nome + 
@@ -21,8 +23,6 @@ abstract class Produto implements Serializable {
                 ", Quantidade: " + quantidade + 
                 ", Valor Unitário: " + valorUnitario;
     }
-
-    public abstract double calcularTaxaIVA(Cliente.Localizacao localizacao);
 
     public double calcularSemIVA() {
         return quantidade * valorUnitario;

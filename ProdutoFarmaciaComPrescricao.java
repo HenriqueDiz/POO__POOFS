@@ -8,14 +8,6 @@ class ProdutoFarmaciaComPrescricao extends Produto{
         this.medico = medico;
     }
 
-    public String getPrescricao() {return prescricao;}
-
-    public void setPrescricao(String prescricao) {this.prescricao = prescricao;}
-
-    public String getMedico() {return medico;}
-
-    public void setMedico(String medico) {this.medico = medico;}
-
     @Override
     public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
         int taxaBase = switch (localizacao) {
@@ -30,4 +22,12 @@ class ProdutoFarmaciaComPrescricao extends Produto{
     public String toString() {
         return super.toString() + ", Prescrição: " + prescricao + ", Médico: " + medico;
     }
+
+    public String getPrescricao() {return prescricao;}
+
+    public void setPrescricao(String prescricao) {this.prescricao = prescricao;}
+
+    public String getMedico() {return medico;}
+
+    public void setMedico(String medico) {this.medico = medico;}
 }

@@ -11,10 +11,6 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
         this.categoriaFarmacia = categoriaFarmacia;
     }
 
-    public CategoriaFarmacia getCategoriaFarmacia() {return categoriaFarmacia;}
-
-    public void setCategoriaFarmacia(CategoriaFarmacia categoriaFarmacia) {this.categoriaFarmacia = categoriaFarmacia;}
-
     @Override
     public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
         int taxaBase = 23;
@@ -26,4 +22,8 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
     public String toString() {
         return super.toString() + ", Categoria: " + categoriaFarmacia;
     }
+
+    public CategoriaFarmacia getCategoriaFarmacia() {return categoriaFarmacia;}
+
+    public void setCategoriaFarmacia(CategoriaFarmacia categoriaFarmacia) {this.categoriaFarmacia = categoriaFarmacia;}
 }

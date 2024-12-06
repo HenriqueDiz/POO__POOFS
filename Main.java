@@ -9,8 +9,8 @@ public class Main {
         else app.loadTxt("docs/poofs.txt");                                          
 
         while (true) {
-            System.out.println("\n---------- POOFS ----------");
-            System.out.println("\n1. Criar cliente");
+            System.out.println("\n\n---------- POOFS ----------");
+            System.out.println("1. Criar cliente");
             System.out.println("2. Editar cliente");
             System.out.println("3. Listar todos os clientes");
             System.out.println("4. Criar fatura");
@@ -19,9 +19,8 @@ public class Main {
             System.out.println("7. Visualizar fatura");
             System.out.println("8. Estatísticas");
             System.out.println("9. Sair");
-            System.out.println("\n---------- POOFS ----------\n");
-            System.out.println("Escolha uma opção: ");
-            int opcao = Integer.parseInt(scanner.nextLine());
+            System.out.println("---------- POOFS ----------\n");
+            int opcao = Auxiliar.lerInteiro("Escolha uma opção: ", scanner);
 
             switch (opcao) {
                 case 1 -> app.criarCliente(scanner);
@@ -36,7 +35,7 @@ public class Main {
                     System.out.println("A sair do programa...");
                     return;
                 }
-                default -> System.out.println("Opção inválida.");
+                default -> System.out.println("\nOpção inválida.");
             }
         }
     }

@@ -43,10 +43,6 @@ class Cliente implements Serializable{
         return faturas.size();
     }
 
-    public List<Fatura> getFaturas() {
-        return faturas;
-    }
-
     protected  Fatura searchFaturaNumero(int numero) {
         for (Fatura fatura : faturas)
             if (fatura.getNumero() == numero)
@@ -69,4 +65,8 @@ class Cliente implements Serializable{
     public int getId() {return id;}
     
     public void setId(int id) {this.id = id;}
+
+    public List<Fatura> getFaturas() {return faturas;}
+
+    public void setFaturas(List<Fatura> faturas) {this.faturas = faturas;}
 }

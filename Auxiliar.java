@@ -2,8 +2,6 @@ import java.util.Scanner;
 
 class Auxiliar {
     
-    // TODO: Testar e Melhorar Métodos
-
     // Método para ler uma string
     public static String lerString(String msg, Scanner scanner) { 
         String input = "";
@@ -103,6 +101,64 @@ class Auxiliar {
             }
         }
         return new Data(dia, mes, ano);
+    }
+
+    // Método para ler uma categoria alimentar
+    public static ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar lerCategoriaAlimentar(String msg, boolean editar, Scanner scanner) {
+        ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria = null;
+        while (true) {
+            System.out.println("1. Congelados");
+            System.out.println("2. Enlatados");
+            System.out.println("3. Vinho");
+            System.out.print(msg);
+            if (editar && scanner.nextLine().isEmpty()) return null;
+            try {
+                int opcao = Integer.parseInt(scanner.nextLine());
+                categoria = switch (opcao) {
+                    case 1 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.congelados;
+                    case 2 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.enlatados;
+                    case 3 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.vinho;
+                    default -> throw new IllegalArgumentException("Opção inválida");
+                };
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+            }
+        }
+        return categoria;
+    }
+
+    // Método para ler uma categoria de farmácia
+    public static ProdutoFarmaciaSemPrescricao.CategoriaFarmacia lerCategoriaFarmacia(String msg, boolean editar, Scanner scanner) {
+        ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoria = null;
+        while (true) {
+            System.out.println("1. Beleza");
+            System.out.println("2. Bem Estar");
+            System.out.println("3. Bebes");
+            System.out.println("4. Animais");
+            System.out.println("5. Outro");
+            System.out.print(msg);
+            if (editar && scanner.nextLine().isEmpty()) return null;
+            try {
+                int opcao = Integer.parseInt(scanner.nextLine());
+                categoria = switch (opcao) {
+                    case 1 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.beleza;
+                    case 2 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.bemEstar;
+                    case 3 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.bebes;
+                    case 4 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.animais;
+                    case 5 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.outro;
+                    default -> throw new IllegalArgumentException("Opção inválida");
+                };
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+            }
+        }
+        return categoria;
     }
 
     // Método para verificar se um ficheiro binário existe

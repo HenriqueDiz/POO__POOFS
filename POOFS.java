@@ -47,10 +47,10 @@ class POOFS {
             return;
         }
 
-        String novoNome = Auxiliar.lerString("Editar Nome (atual: " + cliente.getNome() + " - deixe em branco para manter o atual): ", scanner);
+        String novoNome = Auxiliar.lerString("Editar Nome (atual: " + cliente.getNome() + " - deixe em branco para manter): ", scanner);
         cliente.setNome(novoNome.isEmpty() ? cliente.getNome() : novoNome);
 
-        Cliente.Localizacao novaLocalizacao = Auxiliar.lerLocalizacao("Editar Localização do cliente - deixe em branco para manter a atual): ", true, scanner);
+        Cliente.Localizacao novaLocalizacao = Auxiliar.lerLocalizacao("Editar Localização do cliente (atual: " + cliente.getLocalizacaoFormatada() + " - deixe em branco para manter): ", true, scanner);
         cliente.setLocalizacao(novaLocalizacao == null ? cliente.getLocalizacao() : novaLocalizacao);
 
         System.out.println("Cliente editado com sucesso!");
@@ -96,13 +96,13 @@ class POOFS {
         Fatura novaFatura = new Fatura(numeroFatura, cliente, dataFatura);
         String input;
         do {
-            Produto produto = novaFatura.adicionarProduto(scanner);
+            Produto produto = novaFatura.inputProduto(scanner);
             if (produto != null) {
                 novaFatura.adicionarProduto(produto);
                 System.out.println("Produto adicionado com sucesso!");
             }
             System.out.print("Adicionar outro produto (S/N) ? ");
-            input = scanner.nextLine();
+            input = scanner.nextLine();    // TODO: Pode dar problemas pois pode aceitar qualquer input para sair do ciclo
         } while (input.equalsIgnoreCase("S"));    
 
         cliente.adicionarFatura(novaFatura);
@@ -133,12 +133,12 @@ class POOFS {
             return;
         }
 
-        Data data = Auxiliar.lerData("Editar Data da Fatura (atual: " + fatura.data.toString() + " - deixe em branco para manter o atual - [dd/mm/yy]): ", true, scanner);
+        Data data = Auxiliar.lerData("Editar Data da Fatura (atual: " + fatura.data.toString() + " - deixe em branco para manter - [dd/mm/yy]): ", true, scanner);
         fatura.setData(data == null ? fatura.getData() : data);
         
         int opcao;
         do {
-            System.out.println("\n----- Editar Produtos da Fatura ------");
+            System.out.println("\n----- Editar Produtos da Fatura -----");
             System.out.println("1. Adicionar Produto");
             System.out.println("2. Remover Produto");
             System.out.println("3. Editar Produto");
@@ -147,21 +147,20 @@ class POOFS {
     
             switch (opcao) {
                 case 1 -> {
-                    Produto novoProduto = fatura.adicionarProduto(scanner);
+                    Produto novoProduto = fatura.inputProduto(scanner);
                     if (novoProduto != null) {
                         fatura.adicionarProduto(novoProduto);
                         System.out.println("Produto adicionado com sucesso!");
                     }
                 }
                 case 2 ->{ 
-                    System.out.print("Código do produto a editar: ");
-                    String codigoEditar = scanner.nextLine();
+                    String codigoEditar = Auxiliar.lerString("Código do produto a editar: ", scanner);
                     if (fatura.editarProduto(codigoEditar, scanner)) System.out.println("Produto editado com sucesso!");
                     else System.out.println("Produto não encontrado.");
                 }
                 case 3-> {
                     System.out.print("Código do produto a remover: ");
-                    int codigoRemover = Auxiliar.lerInteiro("Código do produto a remover: ", scanner);
+                    String codigoRemover = Auxiliar.lerString("Código do produto a remover: ", scanner);
                     fatura.removerProduto(codigoRemover);
                 }
                 case 4 -> System.out.println("A sair do menu de edição de fatura...");
@@ -284,7 +283,7 @@ class POOFS {
         } catch (IOException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
-        System.out.println("Dados carregados do Ficheiro de Texto com sucesso!");
+        System.out.println("\nDados carregados do Ficheiro de Texto com sucesso!");
         exportBin();
     }
             
@@ -297,7 +296,7 @@ class POOFS {
                 Cliente cliente = (Cliente) in.readObject();
                 clientes.add(cliente);
             }
-            System.out.println("Dados carregados do Ficheiro Bin com sucesso!!");
+            System.out.println("\nDados carregados do Ficheiro Binário com sucesso!");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Erro ao carregar dados... " + e.getMessage());
         }
@@ -309,7 +308,7 @@ class POOFS {
             out.writeInt(clientes.size());
             for (Cliente cliente : clientes)
                 out.writeObject(cliente);
-            System.out.println("Dados guardados em Ficheiro Binário com sucesso!");
+            System.out.println("Dados guardados no Ficheiro Binário com sucesso!");
         } catch (IOException e) {
             System.err.println("Erro ao guardar dados: " + e.getMessage());
         }

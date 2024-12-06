@@ -10,10 +10,6 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
         this.categoria = categoria;
     }
 
-    public CategoriaAlimentar getCategoria() {return categoria;}
-
-    public void setCategoria(CategoriaAlimentar categoria) {this.categoria = categoria;}
-
     @Override
     public double calcularTaxaIVA(Cliente.Localizacao localizacao) {
         int taxaBase = switch (localizacao) {
@@ -31,4 +27,8 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
     public String toString() {
         return super.toString() + ", Categoria: " + categoria + ", Taxa: Intermédia";
     }
+
+    public CategoriaAlimentar getCategoria() {return categoria;}
+
+    public void setCategoria(CategoriaAlimentar categoria) {this.categoria = categoria;}
 }

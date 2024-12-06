@@ -9,6 +9,11 @@ class Data implements Serializable {
         this.ano = ano;
     }
 
+    @Override
+    public String toString() {
+        return dia + "/" + mes + "/" + ano;
+    }
+
     public int getDia() { return dia; }
 
     public void setDia(int dia) { this.dia = dia; }
@@ -20,8 +25,4 @@ class Data implements Serializable {
     public int getAno() { return ano; }
     
     public void setAno(int ano) { this.ano = ano; }
-
-    public String toString() {
-        return dia + "/" + mes + "/" + ano;
-    }
 }
