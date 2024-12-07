@@ -9,9 +9,18 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Classe principal da aplicação POOFS.
+ * @author Henrique Diz
+ * @author Tomás Gonçalves
+ * @version 1.0
+ */
 class POOFS {
     private List<Cliente> clientes;
 
+    /**
+     * Construtor da aplicação POOFS.
+     */    
     public POOFS() {
         this.clientes = new ArrayList<>();
     }
@@ -19,6 +28,11 @@ class POOFS {
     // ------------------------------ Métodos da Aplicação ------------------------------
 
     // Opção 1 - Criar cliente
+    /**
+     * Criar um novo cliente.
+     *
+     * @param scanner scanner para ler o input
+     */    
     public void criarCliente(Scanner scanner) {
         String nome = Auxiliar.lerString("Nome do novo cliente: ", scanner);
         int contribuinte = Auxiliar.lerInteiro("Nº de Contribuinte do novo cliente: ", scanner);
@@ -34,6 +48,11 @@ class POOFS {
 
 
     // Opção 2 - Editar cliente
+    /**
+     * Editar um cliente existente.
+     *
+     * @param scanner scanner para ler o input
+     */
     public void editarCliente(Scanner scanner) {
         if (clientes.isEmpty()) {
             System.out.println("\nNão há clientes registados na aplicação!");
@@ -59,6 +78,9 @@ class POOFS {
 
 
     // Opção 3 - Listar clientes
+    /**
+     * listar todos os clientes registados.
+     */
     public void listarClientes() {
         if (clientes.isEmpty()) {
             System.out.println("\nNão existem Clientes Registados!");
@@ -70,6 +92,11 @@ class POOFS {
 
 
     // Opção 4 - Criar fatura
+    /**
+     * Criar uma nova fatura para um cliente.
+     *
+     * @param scanner scanner para ler o input
+     */
     public void criarFatura(Scanner scanner) {
         if (clientes.isEmpty()) {
             System.out.println("\nNão há clientes registados na aplicação!");
@@ -112,6 +139,11 @@ class POOFS {
 
 
     // Opção 5 - Editar fatura
+    /**
+     * Editar uma fatura existente.
+     *
+     * @param scanner scanner para ler o input 
+     */
     public void editarFatura(Scanner scanner) {
         if (clientes.isEmpty()) {
             System.out.println("\nNão há clientes registados na aplicação!");
@@ -172,6 +204,9 @@ class POOFS {
     }
 
     // Opção 6 - Listar faturas
+    /**
+     * Listar todas as faturas registadas.
+     */
     public void listarFaturas() {
         boolean flag = false;
         for (Cliente cliente : clientes)
@@ -183,6 +218,11 @@ class POOFS {
     }
 
     // Opção 7 - Visualizar uma fatura específica
+    /**
+     * Visualizar uma fatura específica.
+     *
+     * @param scanner scanner para ler o input
+     */
     public void visualizarFatura(Scanner scanner) {
         if (clientes.isEmpty()) {
             System.out.println("\nNão há clientes registados na aplicação!");
@@ -206,6 +246,9 @@ class POOFS {
     }
 
     // Opção 8 - Apresentar estatísticas
+    /**
+     * Apresentar estatísticas sobre as faturas.
+     */
     public void estatisticas() {
         int totalFaturas = 0, totalProdutos = 0;
         double valorTotalSemIVA = 0.0, valorTotalComIVA = 0.0, valorTotalDoIVA = 0.0;
@@ -228,6 +271,11 @@ class POOFS {
     // ------------------------------ Métodos para Exportar e Importar os Dados da Aplicação POOFS ------------------------------
 
     // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
+    /**
+     * Carregar os dados de um ficheiro de texto.
+     *
+     * @param filePath path do ficheiro de texto
+     */
     public void loadTxt(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
             Cliente cliente = null;
@@ -289,6 +337,11 @@ class POOFS {
             
 
     // Método para carregar os dados de um ficheiro binário (2º Vez e em diante que o programa é executado)
+    /**
+     * Carregar os dados de um ficheiro binário.
+     *
+     * @param filePath path do ficheiro binário
+     */
     public void loadBin(String filePath) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
             int tamanhoClientes = in.readInt();
@@ -303,6 +356,9 @@ class POOFS {
     }
 
     // Método para guardar os dados em binário
+    /**
+     * Guardar os dados num ficheiro binário.
+     */
     public void exportBin() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("docs/dados.bin"))) {
             out.writeInt(clientes.size());
@@ -317,8 +373,13 @@ class POOFS {
 
     // ------------------------------ Métodos Auxiliares da Aplicação POOFS ------------------------------
 
-
     // Função auxiliar para procurar um produto por código
+    /**
+     * Procurar um produto pelo seu código.
+     *
+     * @param id id do cliente
+     * @return cliente encontrado
+     */
     private Cliente searchClientePorId(int id) {
         for (Cliente cliente : clientes)
             if (cliente.getId() == id) return cliente;

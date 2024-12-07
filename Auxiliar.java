@@ -1,8 +1,17 @@
 import java.util.Scanner;
 
+/**
+ * Classe Auxiliar - Leitura do Input do user
+ */
 class Auxiliar {
     
-    // Método para ler uma string
+    /**
+     * Método para ler String do user.
+     *
+     * @param msg parametro que pede tipo de String input
+     * @param scanner scanner para ler o input
+     * @return string do input, caso exista
+     */
     public static String lerString(String msg, Scanner scanner) { 
         String input = "";
         while (true) {
@@ -16,7 +25,13 @@ class Auxiliar {
         return input;
     }
 
-    // Método para ler um inteiro
+    /**
+     * Método para ler String do user.
+     *
+     * @param msg parametro que pede tipo de Inteiro
+     * @param scanner scanner para ler o input
+     * @return input do inteiro, caso exista
+     */
     public static int lerInteiro(String msg, Scanner scanner) {
         int input = 0;
         while (true) {
@@ -31,7 +46,13 @@ class Auxiliar {
         return input;
     }
 
-    // Método para ler um booleano
+    /**
+     * Método para ler Booleano do user.
+     *
+     * @param msg parametro que pede tipo de Boolean
+     * @param scanner scanner para ler o input
+     * @return input do booleano, caso exista
+     */
     public static boolean lerBooleano(String msg, Scanner scanner) {
         boolean input = false;
         while (true) {
@@ -46,7 +67,14 @@ class Auxiliar {
         return input;
     }
 
-    // Método para ler Localização
+    /**
+     * Método para ler Booleano do user.
+     *
+     * @param msg parametro que pede localização
+     * @param editar caso o input esteja a ser editado
+     * @param scanner scanner para ler o input
+     * @return input da localização, caso exista
+     */
     public static Cliente.Localizacao lerLocalizacao(String msg, boolean editar, Scanner scanner) {
         Cliente.Localizacao input = null;
         while (true) {
@@ -73,7 +101,14 @@ class Auxiliar {
         return input;
     }
 
-    // Método para ler uma data
+    /**
+     * Método para ler Data do user.
+     *
+     * @param msg parametro que pede tipo de Data
+     * @param editar caso o input esteja a ser editado
+     * @param scanner scanner para ler o input
+     * @return input da data, caso exista
+     */
     public static Data lerData(String msg, boolean editar, Scanner scanner) {
         int dia = 0, mes = 0, ano = 0;
         while (true) {
@@ -103,7 +138,14 @@ class Auxiliar {
         return new Data(dia, mes, ano);
     }
 
-    // Método para ler uma categoria alimentar
+    /**
+     * Método para ler Categoria Alimentar do user.
+     *
+     * @param msg parametro que pede tipo de Categoria Alimentar
+     * @param editar caso o input esteja a ser editado
+     * @param scanner scanner para ler o input
+     * @return input da categoria alimentar, caso exista
+     */
     public static ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar lerCategoriaAlimentar(String msg, boolean editar, Scanner scanner) {
         ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria = null;
         while (true) {
@@ -130,7 +172,14 @@ class Auxiliar {
         return categoria;
     }
 
-    // Método para ler uma categoria de farmácia
+    /**
+     * Método para ler Categoria Farmacia do user.
+     *
+     * @param msg parametro que pede tipo de Categoria Farmacia
+     * @param editar caso o input esteja a ser editado
+     * @param scanner scanner para ler o input
+     * @return input da categoria farmacia, caso exista
+     */
     public static ProdutoFarmaciaSemPrescricao.CategoriaFarmacia lerCategoriaFarmacia(String msg, boolean editar, Scanner scanner) {
         ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoria = null;
         while (true) {
@@ -161,7 +210,12 @@ class Auxiliar {
         return categoria;
     }
 
-    // Método para verificar se um ficheiro binário existe
+    /**
+     * Método para verofoficar se o ficheiro binário existe.
+     *
+     * @param fileName nome do ficheiro binário
+     * @return true se o ficheiro existir, false caso contrário
+     */
     public static boolean binFileExists(String fileName) {
         java.io.File file = new java.io.File(fileName);
         return file.exists();

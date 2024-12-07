@@ -1,6 +1,16 @@
 import java.util.Scanner;
 
+/**
+ * Classe Main - Classe principal do programa
+ * @author Henrique Diz
+ * @author Tomás Gonçalves
+ * @version 1.0
+ */
 public class Main {
+    /**
+     * Método main - Método principal do programa
+     * @param args argumentos da linha de comandos
+     */
     public static void main(String[] args) {
         POOFS app = new POOFS();
         Scanner scanner = new Scanner(System.in);
