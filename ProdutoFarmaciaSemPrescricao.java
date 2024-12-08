@@ -13,9 +13,9 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
     enum CategoriaFarmacia {
         /** Beleza */
         beleza,
-        /** Bem Estar */
+        /** Bem-Estar */
         bemEstar,
-        /** Bebes */
+        /** Bebés */
         bebes,
         /** Animais */
         animais,

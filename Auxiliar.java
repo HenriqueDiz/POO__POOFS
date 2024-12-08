@@ -62,12 +62,12 @@ class Auxiliar {
      * @param scanner scanner para ler o input
      * @return input do double, caso exista
      */
-    public static Double lerDouble(String msg, Scanner scanner) {
+    public static double lerDouble(String msg, Scanner scanner) {
         while (true) {
             try {
                 System.out.print(msg);
                 String input = scanner.nextLine();
-                return Double.valueOf(input);
+                return Double.parseDouble(input);
             } catch (NumberFormatException e) {
                 System.out.println("\nEntrada inválida. Por favor, digite um número decimal válido.");
             }

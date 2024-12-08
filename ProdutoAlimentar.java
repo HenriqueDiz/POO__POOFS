@@ -35,6 +35,7 @@ abstract class ProdutoAlimentar extends Produto{
         if (biologico) return super.toString() + ", Biológico: Sim";
         else return super.toString() + ", Biológico: Não";
     }
+    
     /**
      * Devolve a categoria do produto.
      *

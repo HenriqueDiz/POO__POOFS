@@ -149,11 +149,11 @@ class Fatura implements Serializable {
     }      
     
     /**
-     * Método para imprimir uma fatura.
-     *
+     * Método para imprimir uma fatura:
+     * detalhada = true -> Opção 7, detalhada = false -> Opção 6
      * @param detalhada true se detalhada, false caso contrário
      */
-    public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
+    public void imprimirFatura(boolean detalhada) {
         System.out.println("\nFatura nº: " + numero);
         System.out.println("Data: " + data.toString());
         System.out.println("Cliente - " + cliente.toString() + "\n");
