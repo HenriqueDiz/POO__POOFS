@@ -35,10 +35,15 @@ class Cliente implements Serializable{
     /**
      * contribuinte do cliente
      */
-    private int contribuinte, id;
-    
+    private int contribuinte; 
+
     /**
      * id do cliente
+     */
+    private int id;
+
+    /**
+     * lista de faturas do cliente
      */
     public  List<Fatura> faturas;
 
