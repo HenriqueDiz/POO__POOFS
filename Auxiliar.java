@@ -171,14 +171,13 @@ class Auxiliar {
      * @param scanner scanner para ler o input
      * @return input da categoria alimentar, caso exista
      */
-    public static ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar lerCategoriaAlimentar(String msg, boolean editar, Scanner scanner) {
+    public static ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar lerCategoriaAlimentar(String msg, Scanner scanner) {
         ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria = null;
         while (true) {
             System.out.println("\n1. Congelados");
             System.out.println("2. Enlatados");
             System.out.println("3. Vinho");
             System.out.print(msg);
-            if (editar && scanner.nextLine().isEmpty()) return null;
             try {
                 int opcao = Integer.parseInt(scanner.nextLine());
                 categoria = switch (opcao) {
@@ -205,7 +204,7 @@ class Auxiliar {
      * @param scanner scanner para ler o input
      * @return input da categoria farmacia, caso exista
      */
-    public static ProdutoFarmaciaSemPrescricao.CategoriaFarmacia lerCategoriaFarmacia(String msg, boolean editar, Scanner scanner) {
+    public static ProdutoFarmaciaSemPrescricao.CategoriaFarmacia lerCategoriaFarmacia(String msg, Scanner scanner) {
         ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoria = null;
         while (true) {
             System.out.println("\n1. Beleza");
@@ -214,7 +213,6 @@ class Auxiliar {
             System.out.println("4. Animais");
             System.out.println("5. Outro");
             System.out.print(msg);
-            if (editar && scanner.nextLine().isEmpty()) return null;
             try {
                 int opcao = Integer.parseInt(scanner.nextLine());
                 categoria = switch (opcao) {
