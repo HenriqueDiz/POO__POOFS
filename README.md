@@ -4,8 +4,8 @@ This system allows a company to register and manage invoices issued to its custo
 The application is designed to comply with tax registration requirements and supports both food and pharmaceutical products, ensuring efficient management of applicable VAT rates. 
 
 Javadoc:
-    - create "javadoc -private -d docs/javadoc *.java" 
-    - run "start docs/javadoc/index.html"
+- create "javadoc -private -d docs/javadoc *.java" 
+- run "start docs/javadoc/index.html"
 
 (2 year - 1 Semester)
 
