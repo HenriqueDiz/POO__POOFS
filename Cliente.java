@@ -14,7 +14,12 @@ class Cliente implements Serializable{
      * enumeração para as localizações possíveis de um cliente
      */    
     public enum Localizacao {
-        portugalContinental, madeira, açores
+        /** Portugal Continental */
+        portugalContinental, 
+        /** Madeira */        
+        madeira, 
+        /** Açores */
+        açores
     }
 
     /**

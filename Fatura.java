@@ -11,9 +11,13 @@ import java.util.Scanner;
  * @version 1.0
  */
 class Fatura implements Serializable {
+    /** Número da fatura */
     protected int numero;
+    /** Cliente da fatura */
     protected Cliente cliente;
+    /** Data da fatura */
     protected Data data;
+    /** Produtos da fatura */
     protected List<Produto> produtos;
 
     /**
@@ -94,7 +98,6 @@ class Fatura implements Serializable {
      *
      * @param codigo código do produto a editar
      * @param scanner scanner para ler o input
-     * @return null se o produto não for encontrado, o produto editado caso contrário
      */
     public void editarProduto(String codigo, Scanner scanner) {
         Produto produto = getProduto(codigo);
@@ -117,7 +120,6 @@ class Fatura implements Serializable {
      * Método para remover um produto.
      *
      * @param codigo código do produto a remover
-     * @return null se o produto não for encontrado, o produto removido caso contrário
      */
     public void removerProduto(String codigo) {
         if (produtos.size() == 1) {

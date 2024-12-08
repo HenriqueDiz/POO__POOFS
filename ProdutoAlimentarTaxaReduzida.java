@@ -13,7 +13,14 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
      * Enumeração para as certificações possíveis de um produto alimentar
      */    
     enum Certificacao {
-        ISO22000, FSSC22000, HACCP, GMP
+        /** ISO22000 */
+        ISO22000,
+        /** FSSC22000 */
+        FSSC22000,
+        /** HACCP */
+        HACCP,
+        /** GMP */
+        GMP
     }
 
     /**

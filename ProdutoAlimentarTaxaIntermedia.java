@@ -8,8 +8,13 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
     /**
      * Enumeração para as categorias alimentares possíveis de um produto alimentar
      */
-    enum CategoriaAlimentar{
-        congelados, enlatados, vinho;
+    enum CategoriaAlimentar {
+        /** Congelados */
+        congelados,
+        /** Enlatados */
+        enlatados,
+        /** Vinho */
+        vinho
     }
 
     /**

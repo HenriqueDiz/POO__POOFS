@@ -5,6 +5,10 @@ import java.util.Scanner;
  * Classe Auxiliar - Leitura do Input do user
  */
 class Auxiliar {
+    /**
+     * Construtor da classe Auxiliar.
+     */
+    public Auxiliar() {}
     
     /**
      * Método para ler String do user.

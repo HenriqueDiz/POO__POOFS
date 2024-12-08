@@ -8,9 +8,16 @@ import java.io.Serializable;
  * @version 1.0
  */
 abstract class Produto implements Serializable {
-    protected String codigo, nome, descricao;
-    protected double valorUnitario;
+    /** Código do produto */
+    protected String codigo;
+    /** Nome do produto */
+    protected String nome;
+    /** Descrição do produto */
+    protected String descricao;
+    /** Quantidade do produto */
     protected int quantidade;
+    /** Valor unitário do produto */
+    protected double valorUnitario;
 
     /**
      * Construtor de um produto.

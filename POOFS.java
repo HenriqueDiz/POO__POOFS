@@ -16,6 +16,7 @@ import java.util.Scanner;
  * @version 1.0
  */
 class POOFS {
+    /** Lista de clientes */
     private List<Cliente> clientes;
 
     /**

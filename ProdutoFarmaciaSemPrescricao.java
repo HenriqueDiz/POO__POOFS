@@ -11,7 +11,16 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
      * Enumeração das categorias de produtos de farmácia.
      */
     enum CategoriaFarmacia {
-        beleza, bemEstar, bebes, animais, outro
+        /** Beleza */
+        beleza,
+        /** Bem Estar */
+        bemEstar,
+        /** Bebes */
+        bebes,
+        /** Animais */
+        animais,
+        /** Outro */
+        outro
     }
 
     /**

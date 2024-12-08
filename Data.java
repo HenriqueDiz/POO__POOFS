@@ -7,7 +7,12 @@ import java.io.Serializable;
  * @version 1.0
  */
 class Data implements Serializable {
-    private int dia, mes, ano;
+    /** Dia da data */
+    private int dia;
+    /** Mês da data */
+    private int mes;
+    /** Ano da data */
+    private int ano;
    
     /**
      * Construtor de uma data.
