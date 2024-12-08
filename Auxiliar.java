@@ -167,7 +167,6 @@ class Auxiliar {
      * Método para ler Categoria Alimentar do user.
      *
      * @param msg parametro que pede tipo de Categoria Alimentar
-     * @param editar caso o input esteja a ser editado
      * @param scanner scanner para ler o input
      * @return input da categoria alimentar, caso exista
      */
@@ -200,7 +199,6 @@ class Auxiliar {
      * Método para ler Categoria Farmacia do user.
      *
      * @param msg parametro que pede tipo de Categoria Farmacia
-     * @param editar caso o input esteja a ser editado
      * @param scanner scanner para ler o input
      * @return input da categoria farmacia, caso exista
      */
