@@ -43,7 +43,7 @@ class Fatura implements Serializable {
      * Método para ler input de um produto.
      *
      * @param scanner scanner para ler o input
-     * @return produto lido
+     * @return null se o input for inválido, o produto criado caso contrário
      */    
     public Produto inputProduto(Scanner scanner) {
         String tipo = Auxiliar.lerString("Tipo de produto (PAI, PAN, PAR, PFCP, PFSP): ", scanner, false);
@@ -94,7 +94,7 @@ class Fatura implements Serializable {
      *
      * @param codigo código do produto a editar
      * @param scanner scanner para ler o input
-     * @return true se o produto foi editado, false caso contrário
+     * @return null se o produto não for encontrado, o produto editado caso contrário
      */
     public void editarProduto(String codigo, Scanner scanner) {
         Produto produto = getProduto(codigo);
@@ -117,6 +117,7 @@ class Fatura implements Serializable {
      * Método para remover um produto.
      *
      * @param codigo código do produto a remover
+     * @return null se o produto não for encontrado, o produto removido caso contrário
      */
     public void removerProduto(String codigo) {
         if (produtos.size() == 1) {

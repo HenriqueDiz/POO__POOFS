@@ -11,6 +11,7 @@ class Auxiliar {
      *
      * @param msg parametro que pede tipo de String input
      * @param scanner scanner para ler o input
+     * @param editar booleano que determina se o input está a ser editado
      * @return string do input, caso exista
      */
     public static String lerString(String msg, Scanner scanner, boolean editar) { 
@@ -29,6 +30,7 @@ class Auxiliar {
      *
      * @param msg parametro que pede tipo de Inteiro
      * @param scanner scanner para ler o input
+     * @param contribuinte booleano que determina se o input é um contribuinte
      * @return input do inteiro, caso exista
      */
     public static int lerInteiro(String msg, Scanner scanner, boolean contribuinte) {
@@ -49,6 +51,13 @@ class Auxiliar {
         return input;
     }
 
+    /**
+     * Método para ler Double do user.
+     *
+     * @param msg parametro que pede tipo de Double
+     * @param scanner scanner para ler o input
+     * @return input do double, caso exista
+     */
     public static Double lerDouble(String msg, Scanner scanner) {
         while (true) {
             try {
@@ -66,7 +75,7 @@ class Auxiliar {
      *
      * @param msg parametro que pede tipo de Boolean
      * @param scanner scanner para ler o input
-     * @return input do booleano, caso exista
+     * @return true se o input for 'S', false se o input for 'N'
      */
     public static boolean lerBooleano(String msg, Scanner scanner) {
         while (true) {
@@ -222,6 +231,13 @@ class Auxiliar {
         return categoria;
     }
 
+    /**
+     * Método para ler Certificações do user.
+     *
+     * @param msg parametro que pede tipo de Certificações
+     * @param scanner scanner para ler o input
+     * @return input das certificações, caso existam
+     */
     public static EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> lerCertificacoes(String msg, Scanner scanner) {
         EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
         while (true) {

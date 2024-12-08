@@ -66,6 +66,11 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
         return super.toString() + ", Certificações: " + getCertificacoesFormatada() + ", Taxa: Reduzida";
     }
 
+    /**
+     * Devolve as certificações do produto formatadas.
+     *
+     * @return certificações do produto formatadas
+     */
     public String getCertificacoesFormatada(){
         String str = "";
         for (Certificacao certificacao : certificacoes) {
