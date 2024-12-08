@@ -9,7 +9,7 @@ class ProdutoAlimentarTaxaNormal extends ProdutoAlimentar {
     /**
      * Construtor de um produto alimentar com taxa de IVA normal.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto

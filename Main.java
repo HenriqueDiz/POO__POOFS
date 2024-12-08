@@ -8,6 +8,11 @@ import java.util.Scanner;
  */
 public class Main {
     /**
+     * Construtor padrão da classe Main - Não utilizado
+     */
+    public Main() {}
+
+    /**
      * Método main - Método principal do programa
      * @param args argumentos da linha de comandos
      */
@@ -30,7 +35,7 @@ public class Main {
             System.out.println("8. Estatísticas");
             System.out.println("9. Sair");
             System.out.println("---------- POOFS ----------\n");
-            int opcao = Auxiliar.lerInteiro("Escolha uma opção: ", scanner);
+            int opcao = Auxiliar.lerInteiro("Escolha uma opção: ", scanner, false);
 
             switch (opcao) {
                 case 1 -> app.criarCliente(scanner);

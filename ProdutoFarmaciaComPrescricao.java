@@ -10,12 +10,17 @@ class ProdutoFarmaciaComPrescricao extends Produto{
     /**
      * Prescrição do produto.
      */
-    private String prescricao, medico;
+    private String prescricao;
+
+    /**
+     * Médico que prescreveu o produto.
+     */
+    private String medico;
 
     /**
      * Construtor de um produto de farmácia com prescrição.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto

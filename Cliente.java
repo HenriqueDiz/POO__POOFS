@@ -61,7 +61,7 @@ class Cliente implements Serializable{
     @Override
     public String toString() { 
         String localizacaoFormatada = getLocalizacaoFormatada();
-        return nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada + ", ID: " + id;
+        return "Nome: " + nome + ", Contribuinte: " + contribuinte + ", Localização: " + localizacaoFormatada + ", ID: " + id;
     }
 
     /**

@@ -1,3 +1,4 @@
+import java.util.EnumSet;
 import java.util.Scanner;
 
 /**
@@ -12,15 +13,13 @@ class Auxiliar {
      * @param scanner scanner para ler o input
      * @return string do input, caso exista
      */
-    public static String lerString(String msg, Scanner scanner) { 
+    public static String lerString(String msg, Scanner scanner, boolean editar) { 
         String input = "";
         while (true) {
             System.out.print(msg);
             input = scanner.nextLine();
-            if (!input.trim().isEmpty()) {
-                break;
-            }
-            System.out.println("Entrada inválida. Por favor, digite uma string válida.");
+            if (!input.trim().isEmpty() || (editar && input.isEmpty())) break;
+            System.out.println("\nEntrada inválida. Por favor, digite uma string válida.");
         }
         return input;
     }
@@ -32,18 +31,34 @@ class Auxiliar {
      * @param scanner scanner para ler o input
      * @return input do inteiro, caso exista
      */
-    public static int lerInteiro(String msg, Scanner scanner) {
+    public static int lerInteiro(String msg, Scanner scanner, boolean contribuinte) {
         int input = 0;
         while (true) {
             System.out.print(msg);
             try {
                 input = Integer.parseInt(scanner.nextLine());
+                if (contribuinte && (input < 100000000 || input > 999999999)) {
+                    System.out.println("\nNúmero de contribuinte inválido. Por favor, digite um número de contribuinte válido.");
+                    continue;
+                }
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite um número inteiro válido.");
+                System.out.println("\nEntrada inválida. Por favor, digite um número inteiro válido.");
             }
         }
         return input;
+    }
+
+    public static Double lerDouble(String msg, Scanner scanner) {
+        while (true) {
+            try {
+                System.out.print(msg);
+                String input = scanner.nextLine();
+                return Double.valueOf(input);
+            } catch (NumberFormatException e) {
+                System.out.println("\nEntrada inválida. Por favor, digite um número decimal válido.");
+            }
+        }
     }
 
     /**
@@ -54,17 +69,13 @@ class Auxiliar {
      * @return input do booleano, caso exista
      */
     public static boolean lerBooleano(String msg, Scanner scanner) {
-        boolean input = false;
         while (true) {
             System.out.print(msg);
             String line = scanner.nextLine();
-            if (line.equalsIgnoreCase("true") || line.equalsIgnoreCase("false")) {
-                input = Boolean.parseBoolean(line);
-                break;
-            }
-            System.out.println("Entrada inválida. Por favor, digite 'true' ou 'false'.");
+            if (line.equalsIgnoreCase("S")) return true;
+            else if (line.equalsIgnoreCase("N")) return false;
+            System.out.println("\nEntrada inválida. Por favor, digite 'S' para Sim ou 'N' para Não.");
         }
-        return input;
     }
 
     /**
@@ -78,24 +89,25 @@ class Auxiliar {
     public static Cliente.Localizacao lerLocalizacao(String msg, boolean editar, Scanner scanner) {
         Cliente.Localizacao input = null;
         while (true) {
-            System.out.println("1. Portugal Continental");
+            System.out.println("\n1. Portugal Continental");
             System.out.println("2. Madeira");
             System.out.println("3. Açores");
             System.out.print(msg);
-            if (editar && scanner.nextLine().isEmpty()) return null;
+            String line = scanner.nextLine();
+            if (editar && line.isEmpty()) return null;
             try {
-                int opcao = Integer.parseInt(scanner.nextLine());
+                int opcao = Integer.parseInt(line);
                 input = switch (opcao) {
                     case 1 -> Cliente.Localizacao.portugalContinental;
                     case 2 -> Cliente.Localizacao.madeira;
                     case 3 -> Cliente.Localizacao.açores;
-                    default -> throw new IllegalArgumentException("Opção inválida");
+                    default -> throw new IllegalArgumentException("\nEntrada inválida. Por favor, digite uma opção válida");
                 };
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println("\nEntrada inválida. Por favor, digite um número inteiro válido.");
             } catch (IllegalArgumentException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println(e.getMessage());
             }
         }
         return input;
@@ -118,19 +130,19 @@ class Auxiliar {
                 if (editar && input.isEmpty()) return null;
 
                 String[] partes = input.split("/");
-                if (partes.length != 3) throw new IllegalArgumentException("Formato de data inválido");
+                if (partes.length != 3) throw new IllegalArgumentException("\nFormato de data inválido");
 
                 dia = Integer.parseInt(partes[0]);
                 mes = Integer.parseInt(partes[1]);
                 ano = Integer.parseInt(partes[2]);
 
-                if (dia < 1 || dia > 31) throw new IllegalArgumentException("Dia inválido");
-                if (mes < 1 || mes > 12) throw new IllegalArgumentException("Mês inválido");
-                if (ano < 1) throw new IllegalArgumentException("Ano inválido");
+                if (dia < 1 || dia > 31) throw new IllegalArgumentException("\nDia inválido");
+                if (mes < 1 || mes > 12) throw new IllegalArgumentException("\nMês inválido");
+                if (ano < 1900 || ano > 9999) throw new IllegalArgumentException("\nAno inválido");
 
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite um número inteiro válido.");
+                System.out.println("\nEntrada inválida. Por favor, digite um número inteiro válido.");
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
@@ -149,7 +161,7 @@ class Auxiliar {
     public static ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar lerCategoriaAlimentar(String msg, boolean editar, Scanner scanner) {
         ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoria = null;
         while (true) {
-            System.out.println("1. Congelados");
+            System.out.println("\n1. Congelados");
             System.out.println("2. Enlatados");
             System.out.println("3. Vinho");
             System.out.print(msg);
@@ -160,13 +172,13 @@ class Auxiliar {
                     case 1 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.congelados;
                     case 2 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.enlatados;
                     case 3 -> ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.vinho;
-                    default -> throw new IllegalArgumentException("Opção inválida");
+                    default -> throw new IllegalArgumentException("\nEntrada inválida. Por favor, digite uma opção válida");
                 };
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println("\nEntrada inválida. Por favor, digite um número inteiro válido.");
             } catch (IllegalArgumentException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println(e.getMessage());
             }
         }
         return categoria;
@@ -183,7 +195,7 @@ class Auxiliar {
     public static ProdutoFarmaciaSemPrescricao.CategoriaFarmacia lerCategoriaFarmacia(String msg, boolean editar, Scanner scanner) {
         ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoria = null;
         while (true) {
-            System.out.println("1. Beleza");
+            System.out.println("\n1. Beleza");
             System.out.println("2. Bem Estar");
             System.out.println("3. Bebes");
             System.out.println("4. Animais");
@@ -198,16 +210,48 @@ class Auxiliar {
                     case 3 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.bebes;
                     case 4 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.animais;
                     case 5 -> ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.outro;
-                    default -> throw new IllegalArgumentException("Opção inválida");
+                    default -> throw new IllegalArgumentException("\nEntrada inválida. Por favor, digite uma opção válida");
                 };
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println("\nEntrada inválida. Por favor, digite um número inteiro válido.");
             } catch (IllegalArgumentException e) {
-                System.out.println("Entrada inválida. Por favor, digite uma opção válida");
+                System.out.println(e.getMessage());
             }
         }
         return categoria;
+    }
+
+    public static EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> lerCertificacoes(String msg, Scanner scanner) {
+        EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
+        while (true) {
+            System.out.println("\n1. ISO22000");
+            System.out.println("2. FSSC22000");
+            System.out.println("3. HACCP");
+            System.out.println("4. GMP");
+            System.out.print(msg);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                try {
+                    String[] parts = input.split(",");
+                    for (String part : parts) {
+                        int index = Integer.parseInt(part.trim()) - 1;
+                        if (index >= 0 && index < ProdutoAlimentarTaxaReduzida.Certificacao.values().length)
+                            certificacoes.add(ProdutoAlimentarTaxaReduzida.Certificacao.values()[index]);
+                        else 
+                            throw new IllegalArgumentException("\nNúmero fora do intervalo de certificações.");
+                    }
+                    return certificacoes;
+                } catch (NumberFormatException e) {
+                    System.out.println("\nEntrada inválida. Por favor, digite números inteiros válidos separados por vírgulas.");
+                    certificacoes.clear();
+                }
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                    certificacoes.clear();
+                }
+            } else System.out.println("\nEntrada inválida. Por favor, digite números inteiros válidos separados por vírgulas.");
+        }
     }
 
     /**

@@ -22,7 +22,7 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
     /**
      * Construtor de um produto de farmácia sem prescrição.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto
@@ -54,7 +54,14 @@ class ProdutoFarmaciaSemPrescricao extends Produto{
      */
     @Override
     public String toString() {
-        return super.toString() + ", Categoria: " + categoriaFarmacia;
+        String categoriaFormatada = switch (categoriaFarmacia) {
+            case beleza -> "Beleza";
+            case bemEstar -> "Bem-estar";
+            case bebes -> "Bebés";
+            case animais -> "Animais";
+            case outro -> "Outro";
+        };
+        return super.toString() + ", Categoria: " + categoriaFormatada;
     }
 
     /**

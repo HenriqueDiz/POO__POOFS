@@ -46,45 +46,47 @@ class Fatura implements Serializable {
      * @return produto lido
      */    
     public Produto inputProduto(Scanner scanner) {
-        String tipo = Auxiliar.lerString("Tipo de produto (PAI, PAN, PAR, PFCP, PFSP): ", scanner);
-        String codigo = Auxiliar.lerString("Código do produto: ", scanner);
-        String nome = Auxiliar.lerString("Nome do produto: ", scanner);
-        String descricao = Auxiliar.lerString("Descrição do produto: ", scanner);
-        int quantidade = Auxiliar.lerInteiro("Quantidade: ", scanner);
-        double valorUnitario = Double.parseDouble(Auxiliar.lerString("Valor unitário: ", scanner));
+        String tipo = Auxiliar.lerString("Tipo de produto (PAI, PAN, PAR, PFCP, PFSP): ", scanner, false);
+        if (!tipo.equals("PAI") && !tipo.equals("PAN") && !tipo.equals("PAR") && !tipo.equals("PFCP") && !tipo.equals("PFSP")) {
+            System.out.println("\nTipo de produto inválido.");
+            return null;
+        }
+        String codigo = Auxiliar.lerString("Código do produto: ", scanner, false);
+        if (getProduto(codigo) != null) {
+            System.out.println("\nCódigo de produto já existente na Fatura.");
+            return null;
+        }
+        String nome = Auxiliar.lerString("Nome do produto: ", scanner, false);
+        String descricao = Auxiliar.lerString("Descrição do produto: ", scanner, false);
+        int quantidade = Auxiliar.lerInteiro("Quantidade: ", scanner, false);
+        double valorUnitario = Auxiliar.lerDouble("Valor unitário: ", scanner);
 
         switch (tipo) {
             case "PAI" -> {
-                boolean biologico = Auxiliar.lerBooleano("É biológico (true/false): ", scanner);
+                boolean biologico = Auxiliar.lerBooleano("É biológico (S/N): ", scanner);
                 ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar categoriaAlimentar = Auxiliar.lerCategoriaAlimentar("Categoria alimentar: ", false, scanner);
                 return new ProdutoAlimentarTaxaIntermedia(codigo, nome, descricao, quantidade, valorUnitario, biologico, categoriaAlimentar);
             }
             case "PAN" -> {
-                boolean biologicoNormal = Auxiliar.lerBooleano("É biológico (true/false): ", scanner);
+                boolean biologicoNormal = Auxiliar.lerBooleano("É biológico (S/N): ", scanner);
                 return new ProdutoAlimentarTaxaNormal(codigo, nome, descricao, quantidade, valorUnitario, biologicoNormal);
             }
             case "PAR" -> {
-                boolean biologicoReduzida = Auxiliar.lerBooleano("É biológico (true/false): ", scanner);
-                String[] certificacoes = Auxiliar.lerString("Certificações (separadas por vírgula): ", scanner).split(",");
-                EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoesSet = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);  // TODO - FALTA METODO PAR AS CERTIFICACOES
-                for (String cert : certificacoes)
-                    certificacoesSet.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
+                boolean biologicoReduzida = Auxiliar.lerBooleano("É biológico (S/N): ", scanner);
+                EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoesSet = Auxiliar.lerCertificacoes("Certificações (separadas por vírgula): ", scanner);
                 return new ProdutoAlimentarTaxaReduzida(codigo, nome, descricao, quantidade, valorUnitario, biologicoReduzida, certificacoesSet);
             }
             case "PFCP" -> {
-                String prescricao = Auxiliar.lerString("Prescrição: ", scanner);
-                String medico = Auxiliar.lerString("Médico: ", scanner);
+                String prescricao = Auxiliar.lerString("Prescrição: ", scanner, false);
+                String medico = Auxiliar.lerString("Médico: ", scanner, false);
                 return new ProdutoFarmaciaComPrescricao(codigo, nome, descricao, quantidade, valorUnitario, prescricao, medico);
             }
             case "PFSP" -> {                                                                                                                            
                 ProdutoFarmaciaSemPrescricao.CategoriaFarmacia categoriaFarmacia = Auxiliar.lerCategoriaFarmacia("Categoria Farmácia: ", false, scanner);
                 return new ProdutoFarmaciaSemPrescricao(codigo, nome, descricao, quantidade, valorUnitario, categoriaFarmacia);
             }
-            default -> {
-                System.out.println("Tipo de produto desconhecido.");
-                return null;
-            }
         }
+        return null;
     }
     
     /**
@@ -94,20 +96,21 @@ class Fatura implements Serializable {
      * @param scanner scanner para ler o input
      * @return true se o produto foi editado, false caso contrário
      */
-    public boolean editarProduto(String codigo, Scanner scanner) {  // Se calhar faz so sentido editar a quantidade ? (como é uma aplicacao de gestao de faturas, não vou estar a alterar a descrição de um produto)
+    public void editarProduto(String codigo, Scanner scanner) {
         Produto produto = getProduto(codigo);
         if (produto != null) {
-            String novoNome = Auxiliar.lerString("Editar Nome (atual: " + produto.getNome() + " - deixe em branco para manter): ", scanner);
+            String novoNome = Auxiliar.lerString("Editar Nome (atual: " + produto.getNome() + " - deixe em branco para manter): ", scanner, true);
             produto.setNome(novoNome.isEmpty() ? produto.getNome() : novoNome);
 
-            String novaDescricao = Auxiliar.lerString("Editar Descrição (atual: " + produto.getDescricao() + " - deixe em branco para manter): ", scanner);
+            String novaDescricao = Auxiliar.lerString("Editar Descrição (atual: " + produto.getDescricao() + " - deixe em branco para manter): ", scanner, true);
             produto.setDescricao(novaDescricao.isEmpty() ? produto.getDescricao() : novaDescricao);
 
-            String novaQuantidade = Auxiliar.lerString("Editar Quantidade (atual: " + produto.getQuantidade() + " - deixe em branco para manter): ", scanner);
+            String novaQuantidade = Auxiliar.lerString("Editar Quantidade (atual: " + produto.getQuantidade() + " - deixe em branco para manter): ", scanner, true);
             if (!novaQuantidade.isEmpty()) produto.setQuantidade(Integer.parseInt(novaQuantidade));
-            return true;
+            System.out.println("\nProduto editado com sucesso.");
+            return;
         }
-        return false;
+        System.out.println("\nProduto não encontrado.");
     }  
     
     /**
@@ -116,12 +119,17 @@ class Fatura implements Serializable {
      * @param codigo código do produto a remover
      */
     public void removerProduto(String codigo) {
+        if (produtos.size() == 1) {
+            System.out.println("\nNão é possível remover o único produto da fatura.");
+            return;
+        }
         for(Produto produto : produtos)
             if (produto.getCodigo().equals(codigo)) {
                 produtos.remove(produto);
+                System.out.println("\nProduto removido com sucesso.");
                 return;
             }
-        System.out.println("Produto não encontrado.");
+        System.out.println("\nProduto não encontrado.");
     }
     
     /**
@@ -145,7 +153,7 @@ class Fatura implements Serializable {
     public void imprimirFatura(boolean detalhada) {  // detalhada = true -> Opção 7, detalhada = false -> Opção 6
         System.out.println("\nFatura nº: " + numero);
         System.out.println("Data: " + data.toString());
-        System.out.println("Cliente: " + cliente.toString() + "\n");
+        System.out.println("Cliente - " + cliente.toString() + "\n");
         if (detalhada){
             listarProdutos();
             System.out.printf("\n\nValor Total do IVA da Fatura: %.2f\n", calcularTotalDoIVA());

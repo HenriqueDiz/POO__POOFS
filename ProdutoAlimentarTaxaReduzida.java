@@ -10,21 +10,21 @@ import java.util.Set;
 class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
 
     /**
-     * enumeração para as certificações possíveis de um produto alimentar
+     * Enumeração para as certificações possíveis de um produto alimentar
      */    
     enum Certificacao {
         ISO22000, FSSC22000, HACCP, GMP
     }
 
     /**
-     * certificações do produto
+     * Certificações do produto
      */
     private final Set<Certificacao> certificacoes; 
     
     /**
      * Construtor de um produto alimentar com taxa de IVA reduzida.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto
@@ -63,7 +63,16 @@ class ProdutoAlimentarTaxaReduzida extends ProdutoAlimentar {
      */
     @Override
     public String toString() {
-        return super.toString() + certificacoes + ", Taxa: Reduzida";
+        return super.toString() + ", Certificações: " + getCertificacoesFormatada() + ", Taxa: Reduzida";
+    }
+
+    public String getCertificacoesFormatada(){
+        String str = "";
+        for (Certificacao certificacao : certificacoes) {
+            if (str.length() > 0) str += "/";
+            str += certificacao;
+        }
+        return str;
     }
 
     /**

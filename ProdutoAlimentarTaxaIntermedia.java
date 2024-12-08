@@ -6,21 +6,21 @@
  */
 class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
     /**
-     * enumeração para as categorias alimentares possíveis de um produto alimentar
+     * Enumeração para as categorias alimentares possíveis de um produto alimentar
      */
     enum CategoriaAlimentar{
         congelados, enlatados, vinho;
     }
 
     /**
-     * categoria alimentar do produto
+     * Categoria alimentar do produto
      */
     private CategoriaAlimentar categoria;
 
     /**
      * Construtor de um produto alimentar com taxa de IVA intermédia.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto	
      * @param quantidade quantidade do produto
@@ -59,7 +59,8 @@ class ProdutoAlimentarTaxaIntermedia extends ProdutoAlimentar {
      */
     @Override
     public String toString() {
-        return super.toString() + ", Categoria: " + categoria + ", Taxa: Intermédia";
+        String categoriaFormatada = categoria.name().substring(0, 1).toUpperCase() + categoria.name().substring(1);
+        return super.toString() + ", Categoria: " + categoriaFormatada + ", Taxa: Intermédia";
     }
 
     /**

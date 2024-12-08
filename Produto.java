@@ -1,7 +1,8 @@
 import java.io.Serializable;
 
 /**
- * Classe abstrata de um Produto, com código, nome, descrição, quantidade e valor unitário.
+ * Classe abstrata de um Produto, comum a todos os produtos farmacêuticos (com e sem prescrição)
+ * e alimentares (com taxa reduzida, intermédia e normal).
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0
@@ -14,7 +15,7 @@ abstract class Produto implements Serializable {
     /**
      * Construtor de um produto.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto

@@ -27,29 +27,27 @@ class POOFS {
 
     // ------------------------------ Métodos da Aplicação ------------------------------
 
-    // Opção 1 - Criar cliente
     /**
-     * Criar um novo cliente.
+     * Opção 1 da aplicação POOFS - Criar um novo cliente.
      *
      * @param scanner scanner para ler o input
      */    
     public void criarCliente(Scanner scanner) {
-        String nome = Auxiliar.lerString("Nome do novo cliente: ", scanner);
-        int contribuinte = Auxiliar.lerInteiro("Nº de Contribuinte do novo cliente: ", scanner);
+        String nome = Auxiliar.lerString("Nome do novo cliente: ", scanner, false);
+        int contribuinte = Auxiliar.lerInteiro("Nº de Contribuinte do novo cliente: ", scanner, true);
         Cliente.Localizacao localizacao = Auxiliar.lerLocalizacao("Localização do novo cliente: ", false, scanner);
         int id = clientes.size() + 1;
 
         Cliente novoCliente = new Cliente(nome, contribuinte, localizacao, id);
         clientes.add(novoCliente);
         
-        System.out.println("Cliente adicionado com sucesso!");
+        System.out.println("\nCliente adicionado com sucesso!");
         exportBin();
     }
 
 
-    // Opção 2 - Editar cliente
     /**
-     * Editar um cliente existente.
+     * Opção 2 da aplicação POOFS - Editar um cliente existente.
      *
      * @param scanner scanner para ler o input
      */
@@ -59,27 +57,26 @@ class POOFS {
             return;
         }
 
-        int id = Auxiliar.lerInteiro("ID do cliente para Editar: ", scanner);
+        int id = Auxiliar.lerInteiro("ID do cliente para Editar: ", scanner, false);
         Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("Cliente não encontrado!");
             return;
         }
 
-        String novoNome = Auxiliar.lerString("Editar Nome (atual: " + cliente.getNome() + " - deixe em branco para manter): ", scanner);
+        String novoNome = Auxiliar.lerString("Editar Nome (atual: " + cliente.getNome() + " - deixe em branco para manter): ", scanner, true);
         cliente.setNome(novoNome.isEmpty() ? cliente.getNome() : novoNome);
 
         Cliente.Localizacao novaLocalizacao = Auxiliar.lerLocalizacao("Editar Localização do cliente (atual: " + cliente.getLocalizacaoFormatada() + " - deixe em branco para manter): ", true, scanner);
         cliente.setLocalizacao(novaLocalizacao == null ? cliente.getLocalizacao() : novaLocalizacao);
 
-        System.out.println("Cliente editado com sucesso!");
+        System.out.println("\nCliente editado com sucesso!");
         exportBin();
     }
 
 
-    // Opção 3 - Listar clientes
     /**
-     * listar todos os clientes registados.
+     * Opção 3 da aplicação POOFS - Listar todos os clientes registados.
      */
     public void listarClientes() {
         if (clientes.isEmpty()) {
@@ -91,9 +88,8 @@ class POOFS {
     }
 
 
-    // Opção 4 - Criar fatura
     /**
-     * Criar uma nova fatura para um cliente.
+     * Opção 4 da aplicação POOFS - Criar uma nova fatura.
      *
      * @param scanner scanner para ler o input
      */
@@ -103,18 +99,18 @@ class POOFS {
             return;
         }
 
-        int id = Auxiliar.lerInteiro("ID do cliente para criar fatura: ", scanner);
+        int id = Auxiliar.lerInteiro("ID do cliente para criar fatura: ", scanner, false);
 
         Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
-            System.out.println("Cliente não encontrado!");
+            System.out.println("\nCliente não encontrado!");
             return;
         }
 
-        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura: ", scanner);
+        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura: ", scanner, false);
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura != null) {
-            System.out.println("Fatura já existe!");
+            System.out.println("\nFatura já existe!");
             return;
         }
 
@@ -126,21 +122,24 @@ class POOFS {
             Produto produto = novaFatura.inputProduto(scanner);
             if (produto != null) {
                 novaFatura.adicionarProduto(produto);
-                System.out.println("Produto adicionado com sucesso!");
+                System.out.println("\nProduto adicionado com sucesso!");
             }
-            System.out.print("Adicionar outro produto (S/N) ? ");
-            input = scanner.nextLine();    // TODO: Pode dar problemas pois pode aceitar qualquer input para sair do ciclo
-        } while (input.equalsIgnoreCase("S"));    
+            do {
+                System.out.print("\nAdicionar outro produto [S/N] ? ");
+                input = scanner.nextLine().trim().toUpperCase();
+                if (!input.equals("S") && !input.equals("N"))
+                    System.out.println("\nEntrada inválida. Por favor, insira 'S' para Sim ou 'N' para Não.");
+            } while (!input.equals("S") && !input.equals("N"));
+        } while (input.equals("S"));  
 
         cliente.adicionarFatura(novaFatura);
-        System.out.println("Fatura criada com sucesso!");
+        System.out.println("\nFatura criada com sucesso!");
         exportBin();
     }
 
 
-    // Opção 5 - Editar fatura
     /**
-     * Editar uma fatura existente.
+     * Opção 5 da aplicação POOFS - Editar uma fatura existente.
      *
      * @param scanner scanner para ler o input 
      */
@@ -150,62 +149,59 @@ class POOFS {
             return;
         }
         
-        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner);
+        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner, false);
         
         Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
-            System.out.println("Cliente não encontrado!");
+            System.out.println("\nCliente não encontrado!");
             return;
         }
 
-        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura a editar: ", scanner);
+        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura a editar: ", scanner, false);
         Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
         if (fatura == null) {
-            System.out.println("Fatura não encontrada!");
+            System.out.println("\nFatura não encontrada!");
             return;
         }
 
-        Data data = Auxiliar.lerData("Editar Data da Fatura (atual: " + fatura.data.toString() + " - deixe em branco para manter - [dd/mm/yy]): ", true, scanner);
+        Data data = Auxiliar.lerData("Editar Data da Fatura (atual: " + fatura.data.toString() + " - deixe em branco para manter): ", true, scanner);
         fatura.setData(data == null ? fatura.getData() : data);
         
         int opcao;
         do {
             System.out.println("\n----- Editar Produtos da Fatura -----");
             System.out.println("1. Adicionar Produto");
-            System.out.println("2. Remover Produto");
-            System.out.println("3. Editar Produto");
+            System.out.println("2. Editar Produto");
+            System.out.println("3. Remover Produto");
             System.out.println("4. Sair");
-            opcao = Auxiliar.lerInteiro("Opção: ", scanner);
-    
+            opcao = Auxiliar.lerInteiro("Opção: ", scanner, false);
             switch (opcao) {
                 case 1 -> {
                     Produto novoProduto = fatura.inputProduto(scanner);
                     if (novoProduto != null) {
                         fatura.adicionarProduto(novoProduto);
-                        System.out.println("Produto adicionado com sucesso!");
+                        System.out.println("\nProduto adicionado com sucesso!");
                     }
                 }
                 case 2 ->{ 
-                    String codigoEditar = Auxiliar.lerString("Código do produto a editar: ", scanner);
-                    if (fatura.editarProduto(codigoEditar, scanner)) System.out.println("Produto editado com sucesso!");
-                    else System.out.println("Produto não encontrado.");
+                    String codigoEditar = Auxiliar.lerString("Código do produto a editar: ", scanner, true);
+                    fatura.editarProduto(codigoEditar, scanner);
                 }
                 case 3-> {
-                    System.out.print("Código do produto a remover: ");
-                    String codigoRemover = Auxiliar.lerString("Código do produto a remover: ", scanner);
+                    String codigoRemover = Auxiliar.lerString("Código do produto a remover: ", scanner, true);
                     fatura.removerProduto(codigoRemover);
                 }
-                case 4 -> System.out.println("A sair do menu de edição de fatura...");
-                default -> System.out.println("Opção inválida.");
+                case 4 -> System.out.println("\nA sair do menu de edição de fatura...");
+                default -> System.out.println("\nOpção inválida.");
             }
         } while (opcao != 4);
-        System.out.println("Fatura editada com sucesso!");
+        System.out.println("\nFatura editada com sucesso!");
         exportBin();
     }
 
-    // Opção 6 - Listar faturas
+
     /**
-     * Listar todas as faturas registadas.
+     * Opção 6 da aplicação POOFS - Listar todas as faturas registadas.
      */
     public void listarFaturas() {
         boolean flag = false;
@@ -217,9 +213,9 @@ class POOFS {
         if (!flag) System.out.println("\nNão existem faturas registadas!");
     }
 
-    // Opção 7 - Visualizar uma fatura específica
+
     /**
-     * Visualizar uma fatura específica.
+     * Opção 7 da aplicação POOFS - Visualizar uma fatura específica.
      *
      * @param scanner scanner para ler o input
      */
@@ -229,14 +225,14 @@ class POOFS {
             return;
         }
 
-        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner);
+        int id = Auxiliar.lerInteiro("ID do cliente associado à fatura: ", scanner, false);
         Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
             System.out.println("\nCliente não encontrado!");
             return;
         }
 
-        int numero = Auxiliar.lerInteiro("Nº da fatura que deseja visualizar: ", scanner);
+        int numero = Auxiliar.lerInteiro("Nº da fatura que deseja visualizar: ", scanner, false);
         Fatura fatura = cliente.searchFaturaNumero(numero);
         if (fatura == null) {
             System.out.println("\nFatura não encontrada!");
@@ -245,9 +241,9 @@ class POOFS {
         fatura.imprimirFatura(true);
     }
 
-    // Opção 8 - Apresentar estatísticas
+
     /**
-     * Apresentar estatísticas sobre as faturas.
+     * Opção 8 da aplicação POOFS - Apresentar estatísticas sobre as faturas.
      */
     public void estatisticas() {
         int totalFaturas = 0, totalProdutos = 0;
@@ -270,9 +266,8 @@ class POOFS {
 
     // ------------------------------ Métodos para Exportar e Importar os Dados da Aplicação POOFS ------------------------------
 
-    // Método para carregar os dados de um ficheiro txt (1º Vez que o programa é executado)
     /**
-     * Carregar os dados de um ficheiro de texto.
+     * Carregar os dados de um ficheiro de texto (1ª vez que o programa é executado).
      *
      * @param filePath path do ficheiro de texto
      */
@@ -329,16 +324,15 @@ class POOFS {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao carregar dados... " + e.getMessage());
+            System.err.println("Erro ao carregar dados... " + e.getMessage());
         }
         System.out.println("\nDados carregados do Ficheiro de Texto com sucesso!");
         exportBin();
     }
             
 
-    // Método para carregar os dados de um ficheiro binário (2º Vez e em diante que o programa é executado)
     /**
-     * Carregar os dados de um ficheiro binário.
+     * Carregar os dados de um ficheiro binário (2ª vez e em diante que o programa é executado).
      *
      * @param filePath path do ficheiro binário
      */
@@ -351,29 +345,28 @@ class POOFS {
             }
             System.out.println("\nDados carregados do Ficheiro Binário com sucesso!");
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Erro ao carregar dados... " + e.getMessage());
+            System.err.println("Erro ao carregar dados... " + e.getMessage());
         }
     }
 
-    // Método para guardar os dados em binário
+
     /**
-     * Guardar os dados num ficheiro binário.
+     * Guardar os dados num ficheiro binário (método chamado sempre que se faz uma alteração nos dados (Criar/Editar Clientes/Faturas).
      */
     public void exportBin() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("docs/dados.bin"))) {
             out.writeInt(clientes.size());
             for (Cliente cliente : clientes)
                 out.writeObject(cliente);
-            System.out.println("Dados guardados no Ficheiro Binário com sucesso!");
+            System.out.println("\nDados guardados no Ficheiro Binário com sucesso!");
         } catch (IOException e) {
-            System.err.println("Erro ao guardar dados: " + e.getMessage());
+            System.err.println("\nErro ao guardar dados: " + e.getMessage());
         }
     }
       
 
     // ------------------------------ Métodos Auxiliares da Aplicação POOFS ------------------------------
 
-    // Função auxiliar para procurar um produto por código
     /**
      * Procurar um produto pelo seu código.
      *

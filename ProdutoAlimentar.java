@@ -1,16 +1,19 @@
 /**
- * Classe abstrata de um Produto Alimentar, com código, nome, descrição, quantidade, valor unitário e biológico.
+ * Classe abstrata de um Produto Alimentar, comum a todos os produtos alimentares (com taxa reduzida, intermédia e normal).
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0
  */
 abstract class ProdutoAlimentar extends Produto{
+    /**
+     * Define se o produto é biológico
+     */
     protected boolean biologico;
 
     /**
      * Construtor de um produto alimentar.
      *
-     * @param codigo codigo do produto
+     * @param codigo código do produto
      * @param nome nome do produto
      * @param descricao descrição do produto
      * @param quantidade quantidade do produto
@@ -29,7 +32,8 @@ abstract class ProdutoAlimentar extends Produto{
      */
     @Override
     public String toString() {
-        return super.toString() + ", Biológico: " + biologico;
+        if (biologico) return super.toString() + ", Biológico: Sim";
+        else return super.toString() + ", Biológico: Não";
     }
     /**
      * Devolve a categoria do produto.
