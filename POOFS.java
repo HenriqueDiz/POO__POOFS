@@ -61,7 +61,7 @@ class POOFS {
         int id = Auxiliar.lerInteiro("ID do cliente para Editar: ", scanner, false);
         Cliente cliente = searchClientePorId(id);
         if (cliente == null) {
-            System.out.println("Cliente não encontrado!");
+            System.out.println("\nCliente não encontrado!");
             return;
         }
 
@@ -108,12 +108,8 @@ class POOFS {
             return;
         }
 
-        int numeroFatura = Auxiliar.lerInteiro("Nº da fatura: ", scanner, false);
-        Fatura fatura = cliente.searchFaturaNumero(numeroFatura);
-        if (fatura != null) {
-            System.out.println("\nFatura já existe!");
-            return;
-        }
+        int numeroFatura = getNumeroFaturas() + 1;
+        System.out.printf("Nº da fatura a ser criada: %d\n", numeroFatura);
 
         Data dataFatura = Auxiliar.lerData("Data da fatura [dd/mm/yy]: ", false, scanner);
 
@@ -247,18 +243,16 @@ class POOFS {
      * Opção 8 da aplicação POOFS - Apresentar estatísticas sobre as faturas.
      */
     public void estatisticas() {
-        int totalFaturas = 0, totalProdutos = 0;
+        int totalProdutos = 0;
         double valorTotalSemIVA = 0.0, valorTotalComIVA = 0.0, valorTotalDoIVA = 0.0;
-        for (Cliente cliente : clientes) {
-            totalFaturas += cliente.getNumeroFaturas();
+        for (Cliente cliente : clientes)
             for (Fatura fatura : cliente.getFaturas()) {
                 totalProdutos += fatura.getNumeroProdutos();
                 valorTotalSemIVA += fatura.calcularTotalSemIVA();
                 valorTotalComIVA += fatura.calcularTotalComIVA();
                 valorTotalDoIVA += fatura.calcularTotalDoIVA();
             }
-        }
-        System.out.printf("\nNúmero de faturas: %d%n", totalFaturas);
+        System.out.printf("\nNúmero de faturas: %d%n", getNumeroFaturas());
         System.out.printf("Número total de produtos: %d%n", totalProdutos);
         System.out.printf("Valor total sem IVA: %.2f%n", valorTotalSemIVA);
         System.out.printf("Valor total com IVA: %.2f%n", valorTotalComIVA);
@@ -294,17 +288,24 @@ class POOFS {
                         int quantidade = Integer.parseInt(dadosProduto[4]);
                         double valorUnitario = Double.parseDouble(dadosProduto[5]);
                         Produto produto = switch (sigla) {
-                            case "PAI" -> new ProdutoAlimentarTaxaIntermedia(codigo, nomeProduto, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
-                            case "PAN" -> new ProdutoAlimentarTaxaNormal(codigo, nomeProduto, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]));
+                            case "PAI" -> {
+                                if (dadosProduto[6].toLowerCase().equals("biológico")) yield new ProdutoAlimentarTaxaIntermedia(codigo, nomeProduto, descricao, quantidade, valorUnitario, true, ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
+                                else yield new ProdutoAlimentarTaxaIntermedia(codigo, nomeProduto, descricao, quantidade, valorUnitario, false, ProdutoAlimentarTaxaIntermedia.CategoriaAlimentar.valueOf(dadosProduto[7]));
+                            }
+                            case "PAN" -> {
+                                if (dadosProduto[6].toLowerCase().equals("biológico")) yield new ProdutoAlimentarTaxaNormal(codigo, nomeProduto, descricao, quantidade, valorUnitario, true);
+                                else yield new ProdutoAlimentarTaxaNormal(codigo, nomeProduto, descricao, quantidade, valorUnitario, false);
+                            }
                             case "PAR" -> {
                                 EnumSet<ProdutoAlimentarTaxaReduzida.Certificacao> certificacoes = EnumSet.noneOf(ProdutoAlimentarTaxaReduzida.Certificacao.class);
                                 for (String cert : dadosProduto[7].split(","))
                                     certificacoes.add(ProdutoAlimentarTaxaReduzida.Certificacao.valueOf(cert));
-                                yield new ProdutoAlimentarTaxaReduzida(codigo, nomeProduto, descricao, quantidade, valorUnitario, Boolean.parseBoolean(dadosProduto[6]), certificacoes);
+                                if (dadosProduto[6].toLowerCase().equals("biológico")) yield new ProdutoAlimentarTaxaReduzida(codigo, nomeProduto, descricao, quantidade, valorUnitario, true, certificacoes);
+                                else yield new ProdutoAlimentarTaxaReduzida(codigo, nomeProduto, descricao, quantidade, valorUnitario, false, certificacoes);
                             }
                             case "PFCP" -> new ProdutoFarmaciaComPrescricao(codigo, nomeProduto, descricao, quantidade, valorUnitario, dadosProduto[6], dadosProduto[7]);
                             case "PFSP" -> new ProdutoFarmaciaSemPrescricao(codigo, nomeProduto, descricao, quantidade, valorUnitario, ProdutoFarmaciaSemPrescricao.CategoriaFarmacia.valueOf(dadosProduto[6]));
-                            default -> throw new IllegalArgumentException("Tipo de produto desconhecido: " + sigla);
+                            default -> throw new IllegalArgumentException("\nTipo de produto desconhecido: " + sigla);
                         };
                         fatura.adicionarProduto(produto);
                     }
@@ -324,8 +325,8 @@ class POOFS {
                     clientes.add(cliente);
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar dados... " + e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("\nErro ao carregar dados... " + e.getMessage());
         }
         System.out.println("\nDados carregados do Ficheiro de Texto com sucesso!");
         exportBin();
@@ -346,7 +347,7 @@ class POOFS {
             }
             System.out.println("\nDados carregados do Ficheiro Binário com sucesso!");
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Erro ao carregar dados... " + e.getMessage());
+            System.err.println("\nErro ao carregar dados... " + e.getMessage());
         }
     }
 
@@ -378,5 +379,16 @@ class POOFS {
         for (Cliente cliente : clientes)
             if (cliente.getId() == id) return cliente;
         return null;
+    }
+
+    /**
+     * Obter o número total de faturas.
+     *
+     * @return número total de faturas
+     */
+    private int getNumeroFaturas() {
+        int totalFaturas = 0;
+        for (Cliente cliente : clientes) totalFaturas += cliente.getNumeroFaturas();
+        return totalFaturas;
     }
 }

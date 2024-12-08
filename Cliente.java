@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Representa um cliente, com nome, contribuinte, localização e ID.
+ * Classe que representa um cliente, com nome, contribuinte, localização e ID.
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0
@@ -11,7 +11,7 @@ import java.util.List;
 class Cliente implements Serializable{
 
     /**
-     * enumeração para as localizações possíveis de um cliente
+     * Enumeração para as localizações possíveis de um cliente
      */    
     public enum Localizacao {
         /** Portugal Continental */

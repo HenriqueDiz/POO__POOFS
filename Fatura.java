@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Representa uma fatura, com número, cliente, data e produtos.
+ * Classe que representa uma fatura, com número, cliente, data e produtos.
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0

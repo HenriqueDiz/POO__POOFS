@@ -6,7 +6,7 @@ import java.util.Scanner;
  */
 class Auxiliar {
     /**
-     * Construtor da classe Auxiliar.
+     * Construtor da classe Auxiliar - Não utilizado
      */
     public Auxiliar() {}
     
@@ -275,7 +275,7 @@ class Auxiliar {
     }
 
     /**
-     * Método para verofoficar se o ficheiro binário existe.
+     * Método para verificar se o ficheiro binário existe.
      *
      * @param fileName nome do ficheiro binário
      * @return true se o ficheiro existir, false caso contrário

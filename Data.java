@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 /**
- * Representa uma data, com dia, mês e ano.
+ * Classe que representa uma data.
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0

@@ -2,8 +2,8 @@
 Henrique Diz;123456789;Portugal Continental
 # Fatura
 1;15;3;2023
-PAI;1;Vinho Tinto;Vinho de qualidade;10;5.0;true;vinho
-PAN;2;Arroz Biológico;Arroz de alta qualidade;20;1.5;true
+PAI;1;Vinho Tinto;Vinho de qualidade;10;5.0;Biológico;vinho
+PAN;2;Arroz Biológico;Arroz de alta qualidade;20;1.5;Biológico
 
 # Fatura
 2;20;3;2024
@@ -11,21 +11,21 @@ PFCP;3;Medicamento A;Para dor de cabeça;5;10.0;usar 2 vezes ao dia;Dr. Silva
 PFSP;4;Creme de Beleza;Para pele seca;3;15.0;beleza
 
 2
-Tommy Gonçalves;987654321;Madeira
+Tomás Gonçalves;987654321;Madeira
 # Fatura
 3;25;3;2010
-PAR;5;Fruta Biológica;Fruta fresca;15;2.0;true;ISO22000,FSSC22000,HACCP,GMP
-PAI;6;Legumes;Legumes frescos;10;3.0;false;congelados
+PAR;5;Fruta Biológica;Fruta fresca;15;2.0;Biológico;ISO22000,FSSC22000,HACCP,GMP
+PAI;6;Legumes;Legumes frescos;10;3.0;Não Biológico;congelados
 
 # Fatura
-5;10;4;2023
+4;10;4;2023
 PFCP;9;Medicamento C;Para alergias;4;20.0;usar 1 vez ao dia;Dr. Mendes
 PFSP;10;Loção Corporal;Para pele sensível;2;25.0;bebes
 
 3
 Amílcar Miranda;456789123;Açores
 # Fatura
-4;30;3;2024
+5;30;3;2024
 PFCP;7;Medicamento B;Para gripe;8;12.0;tomar 3 vezes ao dia;Dr. Costa
 PFSP;8;Shampoo;Para cabelo;6;8.0;bebes
 
@@ -33,11 +33,11 @@ PFSP;8;Shampoo;Para cabelo;6;8.0;bebes
 Maria Silva;321654987;Portugal Continental
 # Fatura
 6;5;4;2024
-PAI;11;Queijo;Queijo de qualidade;5;3.0;true;enlatados
-PAN;12;Pão Integral;Pão de alta qualidade;10;1.0;true
+PAI;11;Queijo;Queijo de qualidade;5;3.0;Biológico;enlatados
+PAN;12;Pão Integral;Pão de alta qualidade;10;1.0;Biológico
 
 # Fatura
 7;10;4;2024
-PAR;13;Vegetais;Vegetais frescos;8;2.5;true;ISO22000,FSSC22000
-PAI;14;Peixe;Peixe fresco;12;4.0;false;congelados
-PAR;15;Melão;Melão da melhor qualidade nacional;2;7.5;true;HACCP
+PAR;13;Vegetais;Vegetais frescos;8;2.5;Biológico;ISO22000,FSSC22000
+PAI;14;Peixe;Peixe fresco;12;4.0;Não Biológico;congelados
+PAR;15;Melão;Melão da melhor qualidade nacional;2;7.5;Biológico;HACCP

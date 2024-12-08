@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 /**
- * Classe Main - Classe principal do programa
+ * Classe Main
  * @author Henrique Diz
  * @author Tomás Gonçalves
  * @version 1.0
